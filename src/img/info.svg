@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="4.448154mm"
+   height="5.1106701mm"
+   viewBox="0 0 4.448154 5.1106701"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
+   sodipodi:docname="max-regel-isometric.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="0.41341518"
+     inkscape:cx="723.24388"
+     inkscape:cy="293.89342"
+     inkscape:window-width="1728"
+     inkscape:window-height="970"
+     inkscape:window-x="0"
+     inkscape:window-y="38"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="axonomgrid"
+       id="grid1"
+       units="mm"
+       originx="-91.730434"
+       originy="-95.039703"
+       spacingx="0.99999998"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       enabled="true"
+       visible="true" />
+    <inkscape:page
+       x="0"
+       y="0"
+       width="4.448154"
+       height="5.1106701"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-91.730428,-95.039701)">
+    <path
+       id="path15-0-9-1-7-3"
+       style="fill:#ffffff;fill-opacity:0.881766;stroke:#000000;stroke-width:0.1;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 93.530813,95.100147 a 2.5980761,2.4999998 0 0 1 2.597774,2.50011 2.5980761,2.4999998 0 0 1 -2.597774,2.500113 z" />
+    <ellipse
+       style="fill:#deddda;fill-opacity:1;stroke:#000000;stroke-width:0.0828494;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path15-0-9-1-0-1"
+       cx="-93.549088"
+       cy="97.589699"
+       rx="1.7772294"
+       ry="2.5085752"
+       transform="scale(-1,1)" />
+    <text
+       xml:space="preserve"
+       style="font-weight:500;font-size:0.478054px;line-height:1;font-family:'Kohinoor Telugu';-inkscape-font-specification:'Kohinoor Telugu Medium';text-align:start;letter-spacing:0px;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#000000;fill-opacity:0.881766;stroke:none;stroke-width:0.0112927;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="92.125923"
+       y="97.583511"
+       id="text17-7"><tspan
+         sodipodi:role="line"
+         id="tspan17-4"
+         style="fill:#000000;stroke:none;stroke-width:0.0112927"
+         x="92.125923"
+         y="97.583511">created: 1989</tspan><tspan
+         sodipodi:role="line"
+         style="fill:#000000;stroke:none;stroke-width:0.0112927"
+         x="92.125923"
+         y="98.061562"
+         id="tspan8"> source: tv</tspan></text>
+  </g>
+</svg>
