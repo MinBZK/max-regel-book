@@ -1,0 +1,21 @@
+[book]
+authors = ["Arvid Halma"]
+language = "en"
+src = "src"
+title = "MaxRegel - Building a Rule Engine from the Ground Up"
+
+# Alerts ()
+[preprocessor.alerts]
+
+[preprocessor.image-size]
+command = "mdbook-image-size"
+
+
+[output.pandoc.profile.pdf]
+output-file = "output.pdf"
+to = "latex"
+
+[output.html]
+default-theme = "light"
+smart-punctuation = true
+mathjax-support = true
