@@ -1,14 +1,5 @@
 # Rules
 
-```
-TOC.
-- example
-- pure functions
-- tracing
-- smaller reusable bits
-- common basic rules
-```
-
 Rules are the tools for deriving new facts from given facts. Those new facts encode the decisions we are interested in.
 
 This is an example from before:
@@ -34,6 +25,14 @@ Those 100 functions on your one data structure can be composed together in lots 
 When you have multiple data structures, the knowledge of how these data structures are glued together with each other ends up being in functions, hence, writing functions gets harder because you will have to repeat that knowledge again and again.
 
 Whereas if you have just one data structure, this knowledge lies inside that data structure itself, hence, freeing functions of this knowledge.
+
+### Breaking down rules
+
+We can create a rule that does many things at the same time. For example a function with the parameters `color = yellow`, `shape != round`, determines the total price for each banana in a (fact)set of available fruits.
+
+But we may already have trouble with one of our design goals: *traceability*. If a fruit is not yellow or round enough for a banana, it is harder to automatically track which of those demands was not met. The same holds for the total price of those fruits: does it make sense for the number of items that met the criteria?
+
+This is why we promote breaking down rules in reusable, simpler rules. Those can we individually checked for correctness and allows for running an audit log on those components.
 
 ## Pure operations
 
@@ -74,18 +73,18 @@ Making rules pure mathematical operators, with tracing capability helps to achie
 - **Maintainable**: Composability leads to cleaner, more modular rule systems. Pure functions are self-contained; they don't depend on external state or mutate anything.
 
 
-
-
-
 ## Rules *can* be...
 
+Rules are strict in the sense that the input and output is always a factset. But they are still very versatile, as the following examples show.
 
-- Reorganize parts
-- Return the input as part of the output fact set
+- Reorganize facts in parts
+- Return the input as part of the output fact set, so data is added, not replaced.
 - Ignore any input and just return some new fact set.
 - Generate facts that indicate some action (e.g. send e-mail, or generate warning)
 - Use metadata. Remember that facts contain the main data (*term*) but also the metadata (*info*). Both parts are available when creating a rule. That means metadata can be part of the logic to create a result, making rules expressive. E.g. a rule that filters people based on age (in *term*) and on source (in *info*).
-- they can take parameters to do their job. So we can create a rule that does many things at the same time. For example a function with the parameters `color = yellow`, `shape != round`, determines the total price for each banana in a (fact)set of available fruits. But we may already have trouble with one of our design goals: *traceability*. If a fruit is not yellow or round enough for a banana, it is harder to automatically track which of those demands was not met. The same holds for the total price of those fruits: does it make sense for the number of items that met the criteria?
-  This is why we promote breaking down rules in reusable, simpler rules. Those can we individually checked for correctness and allows for running an audit log on those components.
+- They can take parameters to do their job. Parameters are not part of the normal input argument (a factset), but rather means to specify a rule further. Take a filter rule for example. It could filter facts on a certain field, say "age > 18". This is then a parameter that is set up once, and can then be applied any number of times to different inputs.
+- Rules can use parameters to retrieve data from external sources. When such a rule gets a customer id, it can retrieve relevant data by a REST API, and format the resulting data as a factset. 
+
+
 
 
