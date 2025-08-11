@@ -3,41 +3,67 @@
 Here we lay out the key drivers to embark on the creation of a new rule engine.
 By identifying design issues and choices before diving in into the weeds of the system's building blocks, the "why" should be more clear. Next we will look at goals, non-goals and consider some cross-cutting concerns[^note].
 
-[^note]: A useful structure, that is loosely followed here, for creating design documents is described here: https://www.industrialempathy.com/posts/design-docs-at-google/
-
 A generic rule engine can take many shapes and forms. Here we try to identify the elements that are dear to us, placing the MaxRegel rule engine in the broader space of related systems.
 
 ## Goals
 Features that we aim for:
 
+### Transparency
 
-- transparency:
-  - In the form of traceability when using the engine. Can you explain to a user what rules and decisions were used to come to
-- correctness: break down in simple, provable (or at least testable) building blocks.
+The engine should make its reasoning visible. Users should be able to see why a decision was made.
 
-- scalable. 
-  - Performant. A handwavy indication is that complex rule sets should be able to handle thousands of cases per second. Speed enables different use cases for have a rule engine in place. For example running simulations during policy design.
-  - Connect to external data sets (such as databases or REST APIs).
+This means full traceability: a clear record of which rules fired, in what order, and which facts were used to reach a conclusion.
 
-- expressiveness. 
-  - provide the tools to rework facts (add fields, filter facts on arbitrary predicates, create new facts). A lot of existing libraries do this well.
-  - declarative: order independent facts and rules. This makes composition of smaller parts easier.
-  
-- maintainable.
-  - In the implementation. implementation from ground up. pure operations. simplicity.
-  - no external dependencies. independence of changes outside control. no weight of unneeded features.
+### Correctness
 
-- rule/data minimalization: 
-- extensible: forward chaining allows to create all possible new insights and tap into new facts at different stages in the process. This makes sharing information to other systems easier, since running the inference engine did not focus on a specific outcome from the start. All new facts could potentially bu send into a message queueing system, for example.  
+The engine should be trustworthy. Rules should work as expected and give predictable results.
 
-- layers of implementing rules: code $\to$ combinator lib $\to$ fluent api $\to$ external script.
+Achieved by breaking logic into small, testable building blocks. Each part can be proven correct individually, reducing errors in the larger system.
 
-simplicity leads to transparency and correctness. 
-dependency free is part of simplicity.
-expressiveness and simplicity can easily contradict each other. 
+### Scalability
 
+The engine should handle large workloads without slowing down. It should work quickly even with many rules and lots of data.
 
-Some goals have overlapping implementation strategies, such as *transparency* 
+- Performance: Complex rule sets should process thousands of cases per second, enabling use cases like running simulations during policy design.
+- Connectivity: Can pull in data from external sources (databases, REST APIs, etc.) as part of its reasoning.
+
+### Expressiveness
+
+The engine should let you describe logic in powerful ways. 
+
+- Tools to rework facts: You can transform, filter, and combine data however you need to create new fact sets.
+- Declarative style: The order of rules and facts doesn't matter, making it easier to compose small pieces into larger systems.
+
+### Maintainability
+
+The system should be easy to understand, change, and extend over time. Built simply, without unnecessary complexity.
+
+- From the ground up: pure operations, minimal moving parts.
+- No external dependencies: avoids breaking changes from outside libraries and avoids bloat from unused features.
+
+### Rule/Data Minimalization
+
+The engine should keep rules and data as simple and focused as possible. Avoid processing data that may not be needed for improved privacy.
+
+Lean models and concise rules reduce maintenance and improve clarity. When an (intermediate) conclusion can already be made, there is no need to collect more (unnecessary) data. 
+
+### Extensibility
+
+The engine should support new ideas and integrations without major rewrites. One can add new functionality and connect to other systems with ease.
+
+- Forward chaining generates all possible new facts, not just those needed for one outcome.
+- These facts can be shared with other systems (e.g., via message queues) at any stage of processing.
+
+### Multiple Layers for Writing Rules
+
+The engine should be usable at different levels of abstraction. You can choose the way to write rules that fits your needs.
+
+Options range from code → combinator library → fluent API → external scripting, allowing flexibility for different teams and skill sets.
+
+---
+
+Some goals can easily be married using the right implementation strategy. For example, an external-dependency-free approach, is part of simplicity, which aids *transparency* and *correctness*.
+But our need for expressiveness can clearly compete with other goals. Designing this system is therefore a balancing act.
 
 ## Non-goals
 
@@ -48,8 +74,6 @@ Extremely high speed. No compilation to bare metal machine code. Readability and
 A end-user friendly rule editing as main goal. The idea that domain experts use a high-level *domain specific language* and/or editor is attractive. It empowers smart people to implement changes in a policy themselves. When strongly believe in supporting such a way, though making that leading from the start may become a red herring in finding a solid base. We expect rules should be shared in a machine readable format too, for example. We have faith our axiomatic way of building higher level building blocks, bit by bit, will (among other things) also allow for highlevel rule representation that suits domain experts.
 
 It also leaves out typing of fields in domain objects. It can be very useful to spell out in great detail that the "price" information of an item costs is not simply "1.95", but that the precision is two digits, the currency is Euro and that is should be formatted as "€ 1,95". It is a complementary effort that MaxRegel can be extended with if required.
-
-## Alternatives considered
 
 ## Cross-cutting concerns
 
