@@ -1,5 +1,6 @@
 # Summary
 
+* [Front](./front.md)
 * [Introduction](./introduction.md)
 * [Background and Motivation](./background.md)
 * [Design Principles](./design.md)
