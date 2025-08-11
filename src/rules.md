@@ -65,9 +65,9 @@ When modelling what a rule should be and how it should behave, we can take that 
 
 Just like facts, rules have metadata too. This information is also a set of arbitrary key-value pairs, for example "source: law 1.2" or "type: fraud detection". Together with tracing as described before, this allows to know even more about the facts that come out of the inference process.
 
-## Toward reaching some goals
+## Supporting our goals
 
-Making rules pure mathematical operators, with tracing capability helps to achieve some of our set goals.
+Making rules pure mathematical operators, with tracing capability helps to achieve some of our set design goals.
 
 - **Correctness**: Pure functions make them deterministic and predictable. It also simplifies testing; you only need to test the function in isolation. Mathematical purity aligns with formal logic and algebraic laws (e.g., associativity, commutativity, distributivity where applicable). This enables formal reasoning, correctness proofs, and possibly static analysis of rules.
 - **Scalability**: When operators are pure, you can replace an expression with its value without changing system behavior (known as *referential transparency*). This property is crucial for optimization, caching, and memoization. Since pure operators have no side effects, their evaluations can be run in parallel without risk of race conditions. This can greatly improve performance in large rule sets.

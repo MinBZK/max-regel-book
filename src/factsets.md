@@ -61,16 +61,16 @@ Without having defined yet how we can create rules on this data container yet, w
 
 Operations on fact sets:
 
-| function name   | argument  | returns  | description                                                           |
-|-----------------|-----------|----------|-----------------------------------------------------------------------|
-| `fs_create`     | facts     | factset  | create a new factset from the facts provided (as list, iterator, ...) |
-| `fs_iterate`    | -         | facts[]  | retrieve all fact objects contained                                   |
-| `fs_size`       | -         | integer  | retrieve the number of facts contained                                |
-| `fs_filter`     | predicate | factset  | retrieve only the facts that pass a given predicate/test              |
-| `fs_part_names` | -         | string[] | retrieve all available part names this factset contains               |
-| `fs_get_part`   | part name | factset  | retrieve only the facts from a given part name                        |
-| `fs_set_part`   | part name | factset  | all facts now belong to a given part                                  |
-
+| function name    | argument  | returns  | description                                                           |
+|------------------|-----------|----------|-----------------------------------------------------------------------|
+| `fs_create`      | facts     | factset  | create a new factset from the facts provided (as list, iterator, ...) |
+| `fs_iterate`     | -         | facts[]  | retrieve all fact objects contained                                   |
+| `fs_count`       | -         | integer  | retrieve the number of facts contained                                |
+| `fs_filter`      | predicate | factset  | retrieve only the facts that pass a given predicate/test              |
+| `fs_part_names`  | -         | string[] | retrieve all available part names this factset contains               |
+| `fs_get_part`    | part name | factset  | retrieve only the facts from a given part name                        |
+| `fs_set_part`    | part name | factset  | all facts now belong to a given part                                  |
+| `fs_remove_part` | part name | factset  | a factset containing all parts, but the one provided                  |
 
 ## Implementation a-specific
 
@@ -83,7 +83,7 @@ It turns out that we can combine different implementations of a factset, all wit
 ## Concatenating Factset
 
 In many occasions, we would want to merge fact sets into a single factset. A factset with children and another with parents can make up a "family" factset for example. One could iterate over the two fact sets individually and create a new one. All the underlying facts are then copied into a new data structure. Since we foresee merging two fact sets will happen often, this may become too resource intensive to make it fast. 
-A dedicated fact set implementation can be created, a *concatenated factset*, that does this in an efficient way. Instead of copying over all facts, it stores two references to the initial (and remember: immutable!) fact sets. When it is asked to determine its size, it will ask the underlying fact sets to give their size and add them up. The same for iteration and filtering facts. This concatenated fact set is said to be a *lazy implementation*, as it postpones the actual work until the last moment that it is requested. 
+A dedicated fact set implementation can be created, a *concatenated factset*, that does this in an efficient way. Instead of copying over all facts, it stores two references to the initial (and remember: immutable!) fact sets. When it is asked to determine its count, it will ask the underlying fact sets to give their count and add them up. The same for iteration and filtering facts. This concatenated fact set is said to be a *lazy implementation*, as it postpones the actual work until the last moment that it is requested. 
 
 So, even though this could be implemented more directly, this special case is partly the success to a fast inference engine. And the good thing is: you can almost forget about it again, since it is just another fact set.
 
