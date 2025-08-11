@@ -12,8 +12,12 @@ command = "mdbook-image-size"
 
 
 [output.pandoc.profile.pdf]
-output-file = "output.pdf"
+output-file = "MaxRegel.pdf"
 to = "latex"
+
+#[output.pandoc.profile.epub]
+#output-file = "MaxRegel.epub"
+#to = "epub"
 
 [output.html]
 default-theme = "light"
