@@ -184,6 +184,120 @@ The fact that we can just keep transforming factsets with rules, and get additio
 
 We have some first rules to recombine parts: `getpart`, `removepart`, `concatenate`, that allow us to recombine fact sets by things from here and add them there, all with a single factset argument and result. There are many useful transformations thinkable, that may come in handy when defining higher level rules.
 
+### Aggregations
 
+An aggregate rule is a function where multiple values are processed together to form a single summary statistic.
 
+Parameters:
+- field to group by (e.g. "gender")
+- field for the value to use (e.g. "age")
+- function to reduce the selected value into a single one
+
+**Example**:
+\\[ \texttt{aggregate}\_{gender, age, max}  \\]
+
+| gender | aggregate_max_age |
+|--------|------------------:|
+| male   |                70 |
+| female |                41 |
+
+### Arithmetic
+
+Apply an arithmetic of two fields of two factset selections.
+
+Parameters:
+- the function to apply (e.g. +, -, \*, /)
+- the rule that selects the first argument (the first field of the first fact's term is used)
+- the rule that selects the second argument (the first field of the first fact's term is used)
+
+**Example**:
+
+This factset contains two parts:
+- revenue
+
+| r | project |
+|---|---------|
+| 5 | A       |
+| 4 | B       |
+| 3 | C       |
+
+- expense
+
+| e |
+|---|
+| 1 |
+| 2 |
+
+Then
+
+\\[ \texttt{arithmetic}\_{-, \texttt{getpart}("revenue"), \texttt{getpart}("expense")}  \\]
+
+yields: 
+
+| x   |
+|-----|
+| 4.0 |
+| 2.0 |
+
+### Const
+
+Some constant value.
+Always evaluates to the given factset, ignoring its factset input argument. This is a way to convert a factset into a rule.
+
+**Example**:
+
+If we have a factset with an "expense" part:
+
+| e |
+|---|
+| 1 |
+| 2 |
+
+and want to use `arithmetic` to add 1, this number is first wrapped in a term (`{x: 1}`), then in a fact, then into a factset with this fact, and then to a rule that is expected as parameter.
+
+\\[ \texttt{arithmetic}\_{-, \texttt{getpart}("revenue"), \texttt{const}(1)}  \\]
+
+yields:
+
+| x |
+|---|
+| 2 |
+| 3 |
+
+### Identity
+
+A rule that does nothing to its input argument and just returns it. This sounds unnecessary, but some other rules may require a rule that creates a selection of some sort. If you want to just want to use all provided facts, `identity` can be used to achieve that.
+
+If we have a factset with an "expense" part:
+
+| e |
+|---|
+| 1 |
+| 2 |
+
+and want to use `arithmetic` to add 1, instead of writing
+\\[ \texttt{arithmetic}\_{-, \texttt{getpart}("revenue"), \texttt{const}(1)}  \\]
+One can as well write:
+\\[ \texttt{arithmetic}\_{-, \texttt{identity}, \texttt{const}(1)}  \\]
+
+to yield:
+
+| x |
+|---|
+| 2 |
+| 3 |
+
+### Join
+
+Join two selections on the given field.
+
+> [!WARNING]  
+> TODO
+
+### Select fields
+
+Just pick certain fields from each fact's terms.
+
+> [!WARNING]  
+> TODO
 
