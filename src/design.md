@@ -31,7 +31,7 @@ The engine should handle large workloads without slowing down. It should work qu
 
 The engine should let you describe logic in powerful ways. 
 
-- Tools to rework facts: You can transform, filter, and combine data however you need to create new fact sets.
+- Tools to rework facts: You can transform, filter, and combine data however you need to create new fact sets in order to capture the logic you want.
 - Declarative style: The order of rules and facts doesn't matter, making it easier to compose small pieces into larger systems.
 
 ### Maintainability
@@ -54,16 +54,25 @@ The engine should support new ideas and integrations without major rewrites. One
 - Forward chaining generates all possible new facts, not just those needed for one outcome.
 - These facts can be shared with other systems (e.g., via message queues) at any stage of processing.
 
-### Multiple Layers for Writing Rules
+### Multiple Abstraction Levels for Writing Rules
 
-The engine should be usable at different levels of abstraction. You can choose the way to write rules that fits your needs.
+We know simplicity and expressiveness are at fundamental odds with one another for many domains.
+A very complicated rule in real life would require the rule engine to have advanced and complicated features to capture the logic accurately. But complicated features make it error-prone, and limit maintainability and transparency.
 
-Options range from code → combinator library → fluent API → external scripting, allowing flexibility for different teams and skill sets.
+Therefore, a goal is to support multiple ways of writing rules, using at different levels of abstraction. That allows you to use a clearer rule, say 90% of the time. But there is an escape hatch for the other complicated 10%. Those rule can then be coded in a less user-friendly way, but gets the job done. It allows one to write rules in a way that fits your needs.
+
+| Level                    | Expressiveness                  | simplicity                      | Write a rule...                                                                                                                                         |
+|--------------------------|---------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| raw programming language | \\( \star \star \star \star \\) | \\( \star \\)                   | in a full fletched programming language with all possibilities and pitfalls.                                                                            |
+| combinator library       | \\( \star \star \star \\)       | \\( \star \star \\)             | using reusable function of the inference engine in code.                                                                                                |
+| fluent API               | \\( \star \star \\)             | \\( \star \star \star \\)       | like an embedded Domain Specific Language (DSL) within code.                                                                                            |
+| rule scripting language  | \\( \star \star \\)             | \\( \star \star \star \star \\) | in the most human readable, yet formal, way possible as external scripts, not requiring the hosting programming language the rule engine is written in. |
+
+A special mention is a rule exchange format, in a way that external DSL editors (such as Jetbrains Meta Programming System, MPS). This is out of scope for this document, but would likely tap into the *combinator library* level.
 
 ---
 
-Some goals can easily be married using the right implementation strategy. For example, an external-dependency-free approach, is part of simplicity, which aids *transparency* and *correctness*.
-But our need for expressiveness can clearly compete with other goals. Designing this system is therefore a balancing act.
+Some goals can easily be married using the right implementation strategy. For example, an external-dependency-free approach, is part of simplicity, which aids *transparency* and *correctness*. But our need for expressiveness can clearly compete with other goals. Designing this system is therefore a balancing act.
 
 ## Non-goals
 
@@ -81,5 +90,5 @@ It also leaves out typing of fields in domain objects. It can be very useful to 
     - It is a small code base.
     - No fancy language features.
     - No external dependencies.
-    - Ability to extent on top of high level parts.
+    - Ability to extent on top of high level parts.~~
 
