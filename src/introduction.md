@@ -30,5 +30,6 @@ Can we design it in such a way it can be easily executed by computers?
 
 The actual implementation in software is not covered in depth, so you don't have to be a programmer.
 
-Sometimes you may encounter so-called JSON to express data. In case you are not familiar with this notation, we'll trust you imagination will get across the main idea. Otherwise, it is briefly discussed in an appendix to help that imagination. 
+> [!TIP]
+> Sometimes you may encounter so-called JSON to express data (e.g. `{"name": "John", "age": 35}`). In case you are not familiar with this notation, we'll trust you imagination will get across the main idea. Otherwise, it is briefly discussed in an appendix to help that imagination. 
 

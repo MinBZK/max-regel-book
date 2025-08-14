@@ -1,6 +1,7 @@
 # Summary
 
-* [Front](./front.md)
+[Front](./front.md)
+
 * [Introduction](./introduction.md)
 * [Background and Motivation](./background.md)
 * [Design Principles](./design.md)
@@ -8,8 +9,8 @@
 * [Fact sets: Managing Collections of Facts](./factsets.md)
 * [Rules: Produce new fact sets](./rules.md)
 * [Scripting: putting rules together](./scriptinglang.md)
+* [Use Cases and Examples](./examples.md)
 * [Implementation details](./implementation.md)
 * [Advanced Features and Extensions](./advanced.md)
-* [Use Cases and Examples](./examples.md)
 * [Future Directions](./future.md)
 * [Appendix: JSON](./json.md)

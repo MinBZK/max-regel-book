@@ -289,15 +289,52 @@ to yield:
 
 ### Join
 
-Join two selections on the given field.
+Join two selections on the given field. It merges two facts into one.
 
-> [!WARNING]  
-> TODO
+Given this factset that defines titles by gender, \\(FS\_{titles}\\), 
+
+| gender | title |
+|--------|:------|
+| male   | Mr.   |
+| female | Ms.   |
+
+we can augment \\(FS\_{persons}\\) with this extra infomation using:
+
+\\[ \texttt{join}\_{gender}(FS\_{persons}, FS\_{titles})  \\]
+
+| name   | hair   | weight | age | gender | title |
+|--------|--------|-------:|----:|--------|-------|
+| Homer  | short  |    250 |  36 | male   | Mr.   |
+| Marge  | long   |    150 |  35 | female | Ms.   |
+| Bart   | short  |     90 |  10 | male   | Mr.   |
+| Lisa   | middle |     78 |   8 | female | Ms.   |
+| Maggie | middle |     20 |   1 | female | Ms.   |
+| Abe    | short  |    170 |  70 | male   | Mr.   |
+| Selma  | long   |    160 |  41 | female | Ms.   |
+| Otto   | long   |    180 |  38 | male   | Mr.   |
+| Krusty | middle |    200 |  45 | male   | Mr.   |
+
+
 
 ### Select fields
 
-Just pick certain fields from each fact's terms.
+Just pick certain fields (columns) from each fact's terms.
 
-> [!WARNING]  
-> TODO
+\\[ \texttt{select}\_{age, hair}(FS\_{persons})  \\]
+
+yields:
+
+| age | hair   |
+|----:|--------|
+|  36 | short  |
+|  35 | long   |
+|  10 | short  |
+|   8 | middle |
+|   1 | middle |
+|  70 | short  |
+|  41 | long   |
+|  38 | long   |
+|  45 | middle |
+
+
 
