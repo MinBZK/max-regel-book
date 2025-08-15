@@ -6,6 +6,9 @@ Those higher level rules are closer to the domain we want to model, and are ther
 
 We'll work up rules to become a programming language in itself. Not one that let's you create games, but one dedicated to create logical systems.
 
+> [!WARNING]
+> This chapter is about making basic things available for creating rules in a sensible way. This may be boring if you don't feel too puristic about this endeavor. If you already believe that simple things such as "selecting facts based on some property", or "counting them" and assigning them to some variable will be possible with *factsets* and the outlines for *rules*, you can make an evasive maneuver here, and skip boring/founding definitions. After all: `n =  getpart("persons"); filter(age > 18); count` clearly means the number of persons older than 18, stored in a factset named "n", right?
+
 ## Basic rules
 
 Remember that we defined fact sets to have certain functionality baked in. Independent of whatever rules we are going to create, fact sets can do certain things themselves.
@@ -132,7 +135,7 @@ The last example shows we have to \\( nest(every(functioncall(FS)))) \\). Functi
 
 Here, \\( \circ \\), is the usual mathematical way to denote function (rule) composition. It performs the right-most function first, then the one on the left, etc. 
 
-In programming, we would often like to think in data flows. First do this, then that, followed by that, etc. It is the same as function composition, but then works in a different direction. We will use the symbol `then`.
+In programming, we would often like to think in data flows. First do this, then that, followed by that, etc. It is the same as function composition, but then works in the opposite direction. We will use the symbol `then`.
 
 \\[   \texttt{filter}\_{age \leq 12} ~ \texttt{then} ~ \texttt{count}  \\]
 
@@ -145,6 +148,9 @@ So far we have seen rules that do something on data (factsets). But can create `
 \\[ \texttt{then}\_{rule_a, rule_b} =  rule_a ~ \texttt{then} ~ rule_b \\]
 
 `then` has two parameters that are rules themselves (e.g. `getpart` and `count`). When the `then` rule is applied, it evaluates the first rule \\( rule_a \\), and applies the second parameter, \\( rule_b \\) on that.
+
+And since we will use `then` a lot, it is better to keep it short. The semicolon, `;`,  means `then` as well.
+\\[   \texttt{filter}\_{age \leq 12} ~ \texttt{;} ~ \texttt{count}  \\]
 
 > [!NOTE]
 > It may not sink in directly, but is elegant to learn that *composition of rules is a rule itself*. 
@@ -173,6 +179,8 @@ And this is a more compact way to visualize the `assign` rule:
 
 ![Fact set](img/assign-2-rule.svg =x350 center)
 
+> [!NOTE]
+> The same as for `then` rules... funny that you can create new variables entirely from the definition of rules and factsets, right? At least from a programming laguage perspective, that is.
 
 ## Celebrating axiomatic thinking
 
@@ -315,7 +323,6 @@ we can augment \\(FS\_{persons}\\) with this extra infomation using:
 | Krusty | middle |    200 |  45 | male   | Mr.   |
 
 
-
 ### Select fields
 
 Just pick certain fields (columns) from each fact's terms.
@@ -336,5 +343,63 @@ yields:
 |  38 | long   |
 |  45 | middle |
 
+## Return if
+
+*Return if* helps handle different cases to determine a returned value. 
+
+Say we are in front of a traffic light, then *green* means 'go' and *red* means "stop", or "don't go".
+
+In our rule engine, we can say there is a traffic light factset:
+
+| light |
+|-------|
+| "red" |
+
+or
+
+| light   |
+|---------|
+| "green" |
+
+and we want to derive a new fact set:
+
+| go    |
+|-------|
+| false |
+
+or
+
+| go   |
+|------|
+| true |
+
+In most programming languages you can do something like this:
+
+```js
+if (light == "green") {
+    return {"go": True}
+}
+
+return {"go": False}
+```
+So, *if* some condition holds, *return* the corresponding value, *else* just continue with the next lines. In this case that turns out to be returning another value. *Returning* is as much delivering the "final value".
+
+Writing
+
+```js
+if *condition* {
+    return expression
+}
+```
+in similar function as before, we get:
+
+\\[ \texttt{return\_if}(condition, rule)  \\]
+
+Here 
+- *condition* is a predicate; a test that takes a factset as an argument and returns `true` or `false`. It is a little expression that says: this property must equal this or that. Or: this must be greater than some value. In our example of persons: `age > 18`, or so.
+- *expression* is some value you want to use later. In this case a *go* or *no go* value. As a factset of course, since this is the way we do things.
 
 
+
+A rule is often composed: do something *then* something else *then* more...
+With a "return_if" somewhere in this chain, we can decide to stop halfway, if the conditions are right. It let's you define shortcuts in you logic flow.

@@ -18,7 +18,7 @@ A special implementation allow just for a single part, and just stores the facts
 
 An even more reduced implementation is the *empty* factset. As you can guess, no facts are contained at all. This is a very common value, to denote "no result", and is worth optimizing for.
 
-A *concatenated factset* was already mentioned before. Being able to combine factsets in constant time, \\(\mathcal{O}(n\log n)\\), simply means instantaneous results, independent of the number of facts contained.
+A *concatenated factset* was already mentioned before. Being able to combine factsets in constant time, \\(\mathcal{O}(1)\\) as computer scientist would say, simply means instantaneous results, independent of the number of facts contained.
 
 Another special mention is the *SQL factset*. Instead of storing facts in memory, it translates operations into SQL, so a connected database can be queried. A `count` becomes `SELECT COUNT(*) AS n FROM TABLE 'partname';` under the hood. Filtering requires translation of the predicate objects to proper `WHERE` expressions. When special operations can't be translated into SQL, all data will have to be copied into an in-memory, general, factset. 
 

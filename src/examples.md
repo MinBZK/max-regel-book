@@ -28,7 +28,8 @@ The engine checks if both conditions are true, and if so, applies the discount.
 
 
 ```
-members = getpart persons; filter (member == true)
+members = getpart("persons") ; filter (member == true)
+discount = returnif( getpart("members"), const({factor: 0.15})) ; const({factor: 0.0})
   
 ```
 
