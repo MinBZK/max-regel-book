@@ -1,5 +1,8 @@
 # Introduction
 
+> [!WARNING]
+> TODO: why it matter for policy people
+
 This document serves as an introduction to the concepts, design and implementation of our rule system, named MaxRegel.
 
 A rule engine is a software system that makes decisions based on a set of rules. Instead of writing a lot of complex code, you list the rules, and the engine figures out what to do based on the facts it knows.
@@ -33,3 +36,6 @@ The actual implementation in software is not covered in depth, so you don't have
 > [!TIP]
 > Sometimes you may encounter so-called JSON to express data (e.g. `{"name": "John", "age": 35}`). In case you are not familiar with this notation, we'll trust you imagination will get across the main idea. Otherwise, it is briefly discussed in an appendix to help that imagination. 
 
+
+> [!WARNING]
+> Terminology appendix: REST API, SQL, ...

@@ -11,9 +11,9 @@ title = "MaxRegel - Building a Rule Engine from the Ground Up"
 command = "mdbook-image-size"
 
 
-[output.pandoc.profile.pdf]
-output-file = "MaxRegel.pdf"
-to = "latex"
+#[output.pandoc.profile.pdf]
+#output-file = "MaxRegel.pdf"
+#to = "latex"
 
 #[output.pandoc.profile.epub]
 #output-file = "MaxRegel.epub"

@@ -9,6 +9,9 @@ Sets can be empty, have a single fact, ... a million.
 
 A fact set can be visualized as a box containing the facts.
 
+> [!WARNING]
+> note single "data structure" for facts. one format to think about them...
+
 ![Fact set](img/factset.svg =x150 center)
 
 This adds extra expressivity to the things we can later ask about data, making it possible to write more complex logic in our rule system.
@@ -20,7 +23,7 @@ Without support for fact sets, this last example would rely on some predefined, 
 
 ## Parts: Organizing fact sets
 
-So went from facts to fact sets as data unit for rules to process. We'll add another feature to those fact sets: a way to (rather superficially) organize *parts* in a factset.
+So went from facts to fact sets as data unit for rules to process. We'll add another feature to those fact sets: a way to organize *parts* in a factset.
 
 A part in a factset is essentially a subset, i.e. a section of facts that belong together under a label (the part name). For example, a factset may contain `persons`, `locations`, `vehicles`, ... Think of them as lists of facts that can be easily selected.
 
@@ -35,6 +38,9 @@ Note that parts are the names that exist in the fact set, but that this name is 
 ## Unified data: one format to rule them all
 
 The possibility to have parts in a factset is a nice addition, but it is not an optional one. The structure of terms, wrapped in facts, wrapped in factsets with parts is a mandatory way of working. And that may seem superfluous for simple cases. What if you want to make a simple fact, indicating a user is admitted to some program, according to law? The corresponding rule would have to return `true` or `false`, right?
+
+> [!WARNING]
+> do step by step, add wrapping.
 
 ```json
 {
@@ -53,13 +59,19 @@ The possibility to have parts in a factset is a nice addition, but it is not an 
 
 As you can see here the actual value is wrapped in a term, that is wrapped in a fact, that is contained in a fact set with part name "result". That is a lot of wrapping, but it is the only data structure you'll ever have to deal with. No other datastructures, such as lists/arrays, maps/dictionaries, tuples, you name it, are used on the level of the rule engine. And that makes clicking them together, staying in the same "realm of thought", much easier.
 
+> [!WARNING]
+> From here it become a bit dry... skip to rules if you want. implementation details.
+
 
 ## Basic operations: what fact sets can do
 
-Without having defined yet how we can create rules on this data container yet, we can define some useful functions for fact sets. Those will be the basic functionality we can rely on when building larger chunks of logic.
+Without having defined yet how we can create rules on our fact sets yet, we can define some useful functions for fact sets. Those will be the basic functionality we can rely on when building larger chunks of logic.
 
 
 Operations on fact sets:
+
+> [!WARNING]
+> [] -> list of ...
 
 | function name    | argument  | returns  | description                                                           |
 |------------------|-----------|----------|-----------------------------------------------------------------------|

@@ -10,6 +10,43 @@ Based on the facts: `group of people` and `the price of a ticket`, we can derive
 
 ![Fact set](img/discount-rule.svg =x350 center)
 
+
+## Pure operations
+
+In addition to the operator format, we will also make them pure function.
+
+Pure functions always return the same result for the same inputs, with no side effects.
+This means the evaluation of a rule is deterministic, making the system predictable. Predictability simplifies debugging and reasoning about the behavior of rules.
+
+## Immutable inputs
+
+Rules never change fact sets. Fact sets are so-called immutable: you can't change its content.
+You can create new (immutable) fact sets, though. So instead of adding a fact to a factset, you create
+a new factset from the original facts and the one you want to add.
+
+This may seem like a simple choice of words, but it guarantees that when you apply a series of operations (an *algorithm*)
+the original data is still intact. This is also called *pure* data processing.
+
+It also handles external data sources, which you may read, but not change in a natural way. You may not be the owner of
+an external database that is used, but you can make selections, add fields etcetera to newly derived facts. Later on in the process, we can refer back to some initial factset, and know it is still the same even though it may have past several operations.
+
+Sometimes this "pure" approach is also challenging. If we want to rename a collection, or add some additional field, do we also need to copy over all its facts?
+That seems wasteful.
+Luckily by implementing this in a smart way, those operations stay efficient, without giving up the guarantees that purity brings. In the chapter "Implementation Details" this is covered in more detail.
+
+## Traceability
+
+When modelling what a rule should be and how it should behave, we can take that opportunity to bolt on additional functionality. When a rule is triggered, we'll make sure the resulting facts contain a reference to that rule. When the rule engine finishes at some point, the results contain a "bibliography" of rules that aided in the construction of a fact. That helps to audit, finding out why a certain result came to be, easier.
+
+## Metadata for rules
+
+Just like facts, rules have metadata too. This information is also a set of arbitrary key-value pairs, for example "source: law 1.2" or "type: fraud detection". Together with tracing as described before, this allows to know even more about the facts that come out of the inference process.
+
+> [!WARNING]
+> uitleggen. zorgt er voor dat je sys wendbaar blijft en dat je beleid in je code terug kan vinden en eventueel aanpassen waar nodig. 
+> Designing the right meta data is important. What information to take? names, urls, version labels, ...
+> multi-disiplinary teams to connect coders and beleid. met goed bepaalde meta data, bedoeling beleid klopt en code klopt . door je beleid door te vertalen naar code, kan je er achter komen of je code het maatschappelijke beleid/doel wordt behaald. manier om te vinden waar je moet teaken. traceabliity. 
+
 ## Composability: Rules as operators
 
 A rule is a function that takes an input fact set, and creates a new output fact set. That makes them *unary operators* in the mathematical sense: functions that take an argument of some type and return something of the same type. Since the input is the same form and shape as the output, this makes clicking them together easy. This makes it easier to build complex rules from smaller, simpler operators without unexpected interactions.
@@ -34,36 +71,6 @@ But we may already have trouble with one of our design goals: *traceability*. If
 
 This is why we promote breaking down rules in reusable, simpler rules. Those can we individually checked for correctness and allows for running an audit log on those components.
 
-## Pure operations
-
-In addition to the operator format, we will also make them pure function.
-
-Pure functions always return the same result for the same inputs, with no side effects.
-This means the evaluation of a rule is deterministic, making the system predictable. Predictability simplifies debugging and reasoning about the behavior of rules.
-
-## Immutable inputs
-
-Rules never change fact sets. Fact sets are so-called immutable: you can't change its content.
-You can create new (immutable) fact sets, though. So instead of adding a fact to a factset, you create
-a new factset from the original facts and the one you want to add.
-
-This may seem like a simple choice of words, but it guarantees that when you apply a series of operations (an *algorithm*)
-the original data is still intact. This is also called *pure* data processing.
-
-It also handles external data sources, which you may read, but not change in a natural way. You may not be the owner of
-an external database that is used, but you can make selections, add fields etcetera to newly derived facts. Later on in the process, we can refer back to some initial factset, and know it is still the same even though it may have past several operations.
-
-Sometimes this "pure" approach is also challenging. If we want to rename a collection, or add some additional field, do we also need to copy over all its facts?
-That seems wasteful. Luckily by implementing this in a smart way, those operations stay efficient, without giving up the guarantees that purity brings.
-
-## Traceability
-
-When modelling what a rule should be and how it should behave, we can take that opportunity to bolt on additional functionality. When a rule is triggered, we'll make sure the resulting facts contain a reference to that rule. When the rule engine finishes at some point, the results contain a "bibliography" of rules that aided in the construction of a fact. That helps to audit, finding out why a certain result came to be, easier.
-
-## Metadata for rules
-
-Just like facts, rules have metadata too. This information is also a set of arbitrary key-value pairs, for example "source: law 1.2" or "type: fraud detection". Together with tracing as described before, this allows to know even more about the facts that come out of the inference process.
-
 ## Supporting our goals
 
 Making rules pure mathematical operators, with tracing capability helps to achieve some of our set design goals.
@@ -71,6 +78,9 @@ Making rules pure mathematical operators, with tracing capability helps to achie
 - **Correctness**: Pure functions make them deterministic and predictable. It also simplifies testing; you only need to test the function in isolation. Mathematical purity aligns with formal logic and algebraic laws (e.g., associativity, commutativity, distributivity where applicable). This enables formal reasoning, correctness proofs, and possibly static analysis of rules.
 - **Scalability**: When operators are pure, you can replace an expression with its value without changing system behavior (known as *referential transparency*). This property is crucial for optimization, caching, and memoization. Since pure operators have no side effects, their evaluations can be run in parallel without risk of race conditions. This can greatly improve performance in large rule sets.
 - **Maintainable**: Composability leads to cleaner, more modular rule systems. Pure functions are self-contained; they don't depend on external state or mutate anything.
+
+> [!NOTE]
+> look back at design goals for examples.
 
 
 ## Rules *can* be...

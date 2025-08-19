@@ -55,11 +55,17 @@ Both approaches have their pros and cons.
 
 Our system uses forward chaining, the more data-driven approach. It's strong points are: 
 
+> [!WARNING]
+> TODO: add policy examples
+
 - When you start with known facts and want to discover *all possible conclusions*. This is convenient when, at different stages, intermediate conclusions are relevant for other parts of an organization, without enumerating all possible relevant facts for external or future systems. 
 
 - When new data is constantly coming in, and you want the system to react to it automatically.
 
 It comes at the price of being more wasteful: many facts may be generated that are irrelevant for most applications. 
+
+> [!WARNING]
+> TODO: explain what happens to irrelevant facts? link met data minimalisatie. hier niet het geval met forward chaining. requires extra thinking...
 
 
 ## Modelling
@@ -72,6 +78,10 @@ In case of a rule engine, writing down rules and facts in a structured way is a 
 
 The benefits of having a model are:
 
+
+> [!WARNING]
+> Kleine voorbeelden...
+
 - **Communication**: It forces you to think clearly and remove ambiguity. Everyone can follow the same formal representation. A model is a common language for different stakeholders (business, developers, scientists).
 
 - **Exploration**: You can analyse "What if?" scenarios safely—without breaking the real system.
@@ -83,6 +93,10 @@ How much detail of the real world do you want to include, when designing a model
 - **Simplicity**: The simpler, the easier it is to comprehend. But if it is too simple, you won't be able to spell out the things you want.
 - **Expressiveness**: The more details, the more realistic and general purpose the model is. But if it is too generic you can possibly express much more than needed, things that may not have a relation with the reality anymore. Or it carries over too much complexity to be of help in the first place.
 
+
+> [!WARNING]
+> Iets met link (of niet) met domein architectuur. dus geen toegang/sec/landschap, puur rekenmachine.
+> TODO: ...
 
 isomorphism. translate problem to formalism.
 

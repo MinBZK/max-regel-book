@@ -400,6 +400,5 @@ Here
 - *expression* is some value you want to use later. In this case a *go* or *no go* value. As a factset of course, since this is the way we do things.
 
 
-
 A rule is often composed: do something *then* something else *then* more...
-With a "return_if" somewhere in this chain, we can decide to stop halfway, if the conditions are right. It let's you define shortcuts in you logic flow.
+With a "return_if" somewhere in this chain, we can decide to stop halfway, if the conditions are right. It lets you define shortcuts in you logic flow.

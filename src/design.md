@@ -8,9 +8,21 @@ A generic rule engine can take many shapes and forms. Here we try to identify th
 ## Goals
 Features that we aim for:
 
+> [!WARNING]
+> Beleidsmatig intro'tje.
+>
+
+> [!WARNING]
+> komt voort uit concat factsets... je hoeft niet hele databases te copieren, maar je kan ze transparant uitlezen wanneer nodig, maar behandelen .....   aaaaaah. 
+
+
 ### Transparency
 
 The engine should make its reasoning visible. Users should be able to see why a decision was made.
+
+
+> [!WARNING]
+> Wie is deze user?
 
 This means full traceability: a clear record of which rules fired, in what order, and which facts were used to reach a conclusion.
 
@@ -19,6 +31,10 @@ This means full traceability: a clear record of which rules fired, in what order
 The engine should be trustworthy. Rules should work as expected and give predictable results.
 
 Achieved by breaking logic into small, testable building blocks. Each part can be proven correct individually, reducing errors in the larger system.
+
+
+> [!WARNING]
+> Iets met divide and conquer.
 
 ### Scalability
 
@@ -31,6 +47,10 @@ The engine should handle large workloads without slowing down. It should work qu
 
 The engine should let you describe logic in powerful ways. 
 
+
+> [!WARNING]
+> "rework" is not edit data! only new facts. never change existing... link naar traceability (only add facts, look back). Example for declaritive.... a->b, b->c or ...
+
 - Tools to rework facts: You can transform, filter, and combine data however you need to create new fact sets in order to capture the logic you want.
 - Declarative style: The order of rules and facts doesn't matter, making it easier to compose small pieces into larger systems.
 
@@ -38,18 +58,32 @@ The engine should let you describe logic in powerful ways.
 
 The system should be easy to understand, change, and extend over time. Built simply, without unnecessary complexity.
 
+> [!WARNING]
+> example ext deps...
+
 - From the ground up: pure operations, minimal moving parts.
 - No external dependencies: avoids breaking changes from outside libraries and avoids bloat from unused features.
 
 ### Rule/Data Minimalization
 
+
+
 The engine should keep rules and data as simple and focused as possible. Avoid processing data that may not be needed for improved privacy.
+
+
+> [!WARNING]
+> explain this done via prioritizing certain rules over others. later rules are not needed anymore.
+
 
 Lean models and concise rules reduce maintenance and improve clarity. When an (intermediate) conclusion can already be made, there is no need to collect more (unnecessary) data. 
 
 ### Extensibility
 
 The engine should support new ideas and integrations without major rewrites. One can add new functionality and connect to other systems with ease.
+
+
+> [!WARNING]
+> elaborate. tap into intermediate outcomes (fraud, process logic)
 
 - Forward chaining generates all possible new facts, not just those needed for one outcome.
 - These facts can be shared with other systems (e.g., via message queues) at any stage of processing.
@@ -70,21 +104,37 @@ Therefore, a goal is to support multiple ways of writing rules, using at differe
 
 A special mention is a rule exchange format, in a way that external DSL editors (such as Jetbrains Meta Programming System, MPS). This is out of scope for this document, but would likely tap into the *combinator library* level.
 
+
+> [!WARNING]
+> Niet echte "goal", maar voorsorteren op oplossing (expressivenes vs transparency/simplicity)
+
+> [!WARNING]
+> Beleid: Extensibility gegarandeerd. je kan altijd uitbreidingen maken en nieuwe regels invoeren...
+
 ---
 
 Some goals can easily be married using the right implementation strategy. For example, an external-dependency-free approach, is part of simplicity, which aids *transparency* and *correctness*. But our need for expressiveness can clearly compete with other goals. Designing this system is therefore a balancing act.
 
 ## Non-goals
 
-Overly generic. It is not a replacement for a full-fledged logical programming language, sucha as Prolog.
+Overly generic. It is not a replacement for a full-fledged logical programming language, such as Prolog.
+
+> [!WARNING]
+> uitleggen.
 
 Extremely high speed. No compilation to bare metal machine code. Readability and correctness in favor of raw speed.
+
+> [!WARNING]
+> wie kan beleid schrijven en vertaling naar code process makkelijk. niet per se code zo makkelijk dat iedereen het meteen gebruikt voor beleid maken. geen realistisch scenario. 
 
 A end-user friendly rule editing as main goal. The idea that domain experts use a high-level *domain specific language* and/or editor is attractive. It empowers smart people to implement changes in a policy themselves. When strongly believe in supporting such a way, though making that leading from the start may become a red herring in finding a solid base. We expect rules should be shared in a machine readable format too, for example. We have faith our axiomatic way of building higher level building blocks, bit by bit, will (among other things) also allow for highlevel rule representation that suits domain experts.
 
 It also leaves out typing of fields in domain objects. It can be very useful to spell out in great detail that the "price" information of an item costs is not simply "1.95", but that the precision is two digits, the currency is Euro and that is should be formatted as "€ 1,95". It is a complementary effort that MaxRegel can be extended with if required.
 
 ## Cross-cutting concerns
+
+> [!WARNING]
+> plaats in voorliggende secties
 
 - This system should be future-proof by its simplicity.
     - It is a small code base.

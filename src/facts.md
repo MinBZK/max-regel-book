@@ -17,7 +17,7 @@ For example, we want to define a `person` that consists of a `name` and an `age`
 
 ![A term](img/term.svg =x150 center)
 
-In our terminology, we'll say that the *term* `person` has two fields. A field has a *key* (the name of the variable) and an actual *value*.
+In our terminology, we'll say that the *term* `person` has two fields. A field has a *key* (the name of the variable) and an actual *value*. In JSON notation, this looks as follows:
 
 ```json
 person = {
@@ -31,6 +31,10 @@ An `address` can be another term, with fields `street`, `house_number`, `city` e
 Those simple objects are commonly referred to *domain objects*, *model objects*, *(named) tuples* or *terms*. We use the latter, "Term", to denote a defined part from the domain of discourse. 
 
 The keys of a term, could in theory be anything, but for mental comfort we'll limit them to lower cased names, possibly separated by an underscore ( _ ).
+
+> [!WARNING]
+> we don't assume validity for fields at this stage, such as missing data. later you can use rules to check if action is required.
+
 
 > [!NOTE]
 > **Implementations detail for programmers.**
@@ -51,6 +55,9 @@ The *actual* data is the *term*, but for example:
 The latter shows how *info* can be used by the rule engine for certain bookkeeping.
 
 Like terms, *info* is organized in key-value pairs.
+
+> [!WARNING]
+> we don't assume validity for fields at this stage, such as different sources. 
 
 ## Facts: Terms with meta data
 
