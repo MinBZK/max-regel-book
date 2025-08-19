@@ -13,4 +13,5 @@
 * [Implementation details](./implementation.md)
 * [Advanced Features and Extensions](./advanced.md)
 * [Future Directions](./future.md)
+* [Appendix: Terminology](./terminology.md)
 * [Appendix: JSON](./json.md)
