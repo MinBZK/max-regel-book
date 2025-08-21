@@ -9,9 +9,6 @@ Sets can be empty, have a single fact, ... a million.
 
 A fact set can be visualized as a box containing the facts.
 
-> [!WARNING]
-> note single "data structure" for facts. one format to think about them...
-
 ![Fact set](img/factset.svg =x150 center)
 
 This adds extra expressivity to the things we can later ask about data, making it possible to write more complex logic in our rule system.
@@ -37,10 +34,31 @@ Note that parts are the names that exist in the fact set, but that this name is 
 
 ## Unified data: one format to rule them all
 
-The possibility to have parts in a factset is a nice addition, but it is not an optional one. The structure of terms, wrapped in facts, wrapped in factsets with parts is a mandatory way of working. And that may seem superfluous for simple cases. What if you want to make a simple fact, indicating a user is admitted to some program, according to law? The corresponding rule would have to return `true` or `false`, right?
+The possibility to have parts in a factset is a nice addition, but it is not an optional one. The structure of terms, wrapped in facts, wrapped in factsets with parts is a mandatory way of working. And that may seem superfluous for simple cases. 
 
-> [!WARNING]
-> do step by step, add wrapping.
+What if you want to make a simple fact, indicating a user is admitted to some program, according to law? The corresponding rule would have to return `true` or `false`, right?
+
+```json
+{ "admitted": true}
+```
+
+This is JSON[^jsonnote] way of formatting the data structure of a term with the result.
+But remember that a term is wrapped together with metadata, called `info` into a *fact* object.
+
+[^jsonnote] Remember there is an appendix explaining JSON notation.
+
+```json
+{ // a fact
+  "term": {
+    "admitted": true // the thing we actually try to say
+  },
+  "info": { // some meta data
+    "source": "law"
+  }
+}
+```
+
+But then again, we're trying to make the point that we always want to think in *fact sets*: a list (`[...]`) of zero or more facts, under a part name. So, we end up with the following structure as our result:
 
 ```json
 {
@@ -56,12 +74,10 @@ The possibility to have parts in a factset is a nice addition, but it is not an 
   ]
 }
 ```
-
 As you can see here the actual value is wrapped in a term, that is wrapped in a fact, that is contained in a fact set with part name "result". That is a lot of wrapping, but it is the only data structure you'll ever have to deal with. No other datastructures, such as lists/arrays, maps/dictionaries, tuples, you name it, are used on the level of the rule engine. And that makes clicking them together, staying in the same "realm of thought", much easier.
 
 > [!WARNING]
-> From here it become a bit dry... skip to rules if you want. implementation details.
-
+> From here it become a bit formal (read: dry)... Skip to the next chapter if you want.
 
 ## Basic operations: what fact sets can do
 

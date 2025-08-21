@@ -42,10 +42,9 @@ When modelling what a rule should be and how it should behave, we can take that 
 
 Just like facts, rules have metadata too. This information is also a set of arbitrary key-value pairs, for example "source: law 1.2" or "type: fraud detection". Together with tracing as described before, this allows to know even more about the facts that come out of the inference process.
 
-> [!WARNING]
-> uitleggen. zorgt er voor dat je sys wendbaar blijft en dat je beleid in je code terug kan vinden en eventueel aanpassen waar nodig. 
-> Designing the right meta data is important. What information to take? names, urls, version labels, ...
-> multi-disiplinary teams to connect coders and beleid. met goed bepaalde meta data, bedoeling beleid klopt en code klopt . door je beleid door te vertalen naar code, kan je er achter komen of je code het maatschappelijke beleid/doel wordt behaald. manier om te vinden waar je moet teaken. traceabliity. 
+Annotating data with meta data is an extra insurance for *maintainability* and *extensibility*, i.e. future-proof. It means data and code can be identified later on, and adapted where needed.
+
+Designing the right metadata is important. What information to take into account? Names, urls, version labels, sources? This is a good moment for a multidisciplinary team to come together: what data is needed to make effective tracing possible? Is there enough information to provide relevant support?
 
 ## Composability: Rules as operators
 

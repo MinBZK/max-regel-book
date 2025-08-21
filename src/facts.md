@@ -32,13 +32,8 @@ Those simple objects are commonly referred to *domain objects*, *model objects*,
 
 The keys of a term, could in theory be anything, but for mental comfort we'll limit them to lower cased names, possibly separated by an underscore ( _ ).
 
-> [!WARNING]
-> we don't assume validity for fields at this stage, such as missing data. later you can use rules to check if action is required.
-
-
 > [!NOTE]
-> **Implementations detail for programmers.**
-> Terms can be implemented as mappings, dicts, tuples, objects. This framework supports them all and build on top of an abstract Term class. It also provides a general functionality for equality checks  that compares terms in an field-order independent way.
+> Note that we don't assume any validity checking on fields at this stage, such (dis)allowing missing data, or formats in which dates should be written. Later on, you can use rules to check if terms are valid.
 
 ## Info: Meta data
 
@@ -55,9 +50,6 @@ The *actual* data is the *term*, but for example:
 The latter shows how *info* can be used by the rule engine for certain bookkeeping.
 
 Like terms, *info* is organized in key-value pairs.
-
-> [!WARNING]
-> we don't assume validity for fields at this stage, such as different sources. 
 
 ## Facts: Terms with meta data
 

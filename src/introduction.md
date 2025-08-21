@@ -6,7 +6,10 @@ A rule engine is a software system that makes decisions based on a set of rules.
 
 A rule engine helps organizations make decisions automatically and consistently. Instead of relying on people to remember and apply many rules by hand, the engine checks information against clear “if this, then that” instructions. This means decisions can be made faster, with fewer mistakes, and in the same way every time. Another benefit is flexibility: rules can be updated or added without changing the whole system, making it easier to adapt when policies, regulations, or business needs change. Overall, a rule engine saves time, reduces errors, and ensures that important decisions follow the right guidelines.
 
-The organization of this document is as follows:
+Rule engines are a great place for multidisciplinary teams, connecting coders and policymakers. 
+By translating a policy to formal rules, you can validate if an automated process is matching the intended goal. That makes rule engines a communication medium for different roles in an organization.
+
+This document is structured as follows:
 
 * **Background**: covering general information about rule systems.
 * **Design**: what goals, non-goals, insight make up the wishlist of our system.

@@ -6,7 +6,7 @@ Now we have a design, a model for capturing logic with factsets and rules, it ca
 
 The things that contain our data (terms, wrapped in facts) can be implemented in different ways. One way is to use generic data structures like (hash)maps/dictionaries found in all programming languages. This data structure does not make assumptions about its content and that makes them very versatile. But you may prefer strict objects for your data. A `person` can not have a property `screen_brightness` (for humans are no computer screens, after all). Many languages have "classes" in one way or more. This strictness helps preventing certain mistakes. 
 
-In our reference implementation, *terms* can be implemented with both of those strategies. Both can be beneficial in the right context. A term `interface` guards that those implementations can be treated the same. For example, they can both enumerate their field names, and equality checks happen in an order independent way. 
+In our reference implementation, *terms* can be implemented with both of those strategies. Both can be beneficial in the right context. A term *interface* guards that those implementations can be treated the same. For example, they can both enumerate their field names, and equality checks happen in an order independent way. 
 
 ## Factsets
 
