@@ -60,35 +60,12 @@ Lean models and concise rules reduce maintenance and improve clarity. When an (i
 
 ### Extensibility
 
-The engine should support new ideas and integrations without major rewrites. One can add new functionality and connect to other systems with ease.
+The engine should support new ideas and integrations without major rewrites. Eventhough you never know what the future you bring, allowing adaptability makes a rule engine more sustainable. One can add new functionality and connect to other systems with ease.
 
 Forward chaining generates all possible new facts, not just those needed for one outcome. 
 These facts can be shared with other systems (e.g., via message queues) at any stage of processing.
 
 In our discount example, when determining the number of kids in a family, this is done for determining the discount. But that number may itself be fed into a fraud detection system. E.g. "more than 100 children in one family generates an alert of possible fraud". Or, for people receiving a discount, send some happy email to offer them next month another benefit.
-
-### Multiple Abstraction Levels for Writing Rules
-
-We know simplicity and expressiveness are at fundamental odds with one another for many domains.
-A very complicated rule in real life would require the rule engine to have advanced and complicated features to capture the logic accurately. But complicated features make it error-prone, and limit maintainability and transparency.
-
-Therefore, a goal is to support multiple ways of writing rules, using at different levels of abstraction. That allows you to use a clearer rule, say 90% of the time. But there is an escape hatch for the other complicated 10%. Those rule can then be coded in a less user-friendly way, but gets the job done. It allows one to write rules in a way that fits your needs.
-
-| Level                    | Expressiveness                  | simplicity                      | Write a rule...                                                                                                                                         |
-|--------------------------|---------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-| raw programming language | \\( \star \star \star \star \\) | \\( \star \\)                   | in a full fletched programming language with all possibilities and pitfalls.                                                                            |
-| combinator library       | \\( \star \star \star \\)       | \\( \star \star \\)             | using reusable function of the inference engine in code.                                                                                                |
-| fluent API               | \\( \star \star \\)             | \\( \star \star \star \\)       | like an embedded Domain Specific Language (DSL) within code.                                                                                            |
-| rule scripting language  | \\( \star \star \\)             | \\( \star \star \star \star \\) | in the most human readable, yet formal, way possible as external scripts, not requiring the hosting programming language the rule engine is written in. |
-
-A special mention is a rule exchange format, in a way that external DSL editors (such as Jetbrains Meta Programming System, MPS). This is out of scope for this document, but would likely tap into the *combinator library* level.
-
-
-> [!WARNING]
-> Niet echte "goal", maar voorsorteren op oplossing (expressivenes vs transparency/simplicity)
-
-> [!WARNING]
-> Beleid: Extensibility gegarandeerd. je kan altijd uitbreidingen maken en nieuwe regels invoeren...
 
 ---
 
@@ -115,12 +92,32 @@ It also leaves out typing of fields in domain objects. It can be very useful to 
 
 ## Cross-cutting concerns
 
-> [!WARNING]
-> plaats in voorliggende secties
+Things that are not goals themselves, but are expected to be important for a successful solution are described here.
 
-- This system should be future-proof by its simplicity.
-    - It is a small code base.
-    - No fancy language features.
-    - No external dependencies.
-    - Ability to extent on top of high level parts.~~
+
+### Simplicity
+
+Keeping the system _simple_ is... not so simple, given our goals. If we keep it as simple as possible it is more likely to be future-proof.  
+
+Simplicity can show at different levels:
+- Ensuring a small code base for the rule engine. 
+- No fancy language features. Rather implement the rule engine with a few more lines of code, than cryptic/smart one-liners.
+- No or limit external dependencies.
+
+### Multiple Abstraction Levels for Writing Rules
+
+We know simplicity and expressiveness are at fundamental odds with one another for many domains.
+A very complicated rule in real life would require the rule engine to have advanced and complicated features to capture the logic accurately. But complicated features make it error-prone, and limit maintainability and transparency.
+
+Therefore, a goal is to support multiple ways of writing rules, using at different levels of abstraction. That allows you to use a clearer rule, say 90% of the time. But there is an escape hatch for the other complicated 10%. Those rule can then be coded in a less user-friendly way, but gets the job done. It allows one to write rules in a way that fits your needs.
+
+| Level                    | Expressiveness                  | simplicity                      | Write a rule...                                                                                                                                         |
+|--------------------------|---------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| raw programming language | \\( \star \star \star \star \\) | \\( \star \\)                   | in a full fletched programming language with all possibilities and pitfalls.                                                                            |
+| combinator library       | \\( \star \star \star \\)       | \\( \star \star \\)             | using reusable function of the inference engine in code.                                                                                                |
+| fluent API               | \\( \star \star \\)             | \\( \star \star \star \\)       | like an embedded Domain Specific Language (DSL) within code.                                                                                            |
+| rule scripting language  | \\( \star \star \\)             | \\( \star \star \star \star \\) | in the most human readable, yet formal, way possible as external scripts, not requiring the hosting programming language the rule engine is written in. |
+
+A special mention is a rule exchange format, in a way that external DSL editors (such as Jetbrains Meta Programming System, MPS). This is out of scope for this document, but would likely tap into the *combinator library* level.
+
 
