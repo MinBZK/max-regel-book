@@ -11,9 +11,6 @@ When choosing or building a rule engine, organizations care about more than just
 
 We will look at those goals in more detail:
 
-> [!WARNING]
-> komt voort uit concat factsets... je hoeft niet hele databases te copieren, maar je kan ze transparant uitlezen wanneer nodig, maar behandelen .....   aaaaaah. 
-
 
 ### Transparency
 
@@ -56,6 +53,8 @@ The engine should keep rules and data as simple and focused as possible. Avoid p
 
 For example, when we can already see a customer is a member, and therefore will receive a discount, another rule checking the same discount based on a more privacy-sensitive age data can be omitted.
 
+Also, the data needed for performing the logic of a rule, should not have to be copied over to the rule engine. The rule engine would just connect to a part of an external database, making privacy (GDPR) compliance easier. 
+
 Lean models and concise rules reduce maintenance and improve clarity. When an (intermediate) conclusion can already be made, there is no need to collect more (unnecessary) data. 
 
 ### Extensibility
@@ -66,6 +65,8 @@ Forward chaining generates all possible new facts, not just those needed for one
 These facts can be shared with other systems (e.g., via message queues) at any stage of processing.
 
 In our discount example, when determining the number of kids in a family, this is done for determining the discount. But that number may itself be fed into a fraud detection system. E.g. "more than 100 children in one family generates an alert of possible fraud". Or, for people receiving a discount, send some happy email to offer them next month another benefit.
+
+Another way to look at extensibility is to ensure no proprietary software is needed to edit rules. Complicated and closed formats for storing rules may one day be a liability: what if the software company ceases to support the required software? An open (text-based) format for rules leaves the door open to create an alternative way of reusing those rules previously defined.
 
 ---
 
@@ -81,12 +82,12 @@ All in all, designing this system is therefore a balancing act.
 
 Overly generic. It is not a replacement for a full-fledged logical programming language, such as Prolog. General programming languages allow you to build anything, from rule engines to games. It comes at the price complexity with little aid to spell out you specific business logic.
 
-Extremely high speed. No compilation to bare metal machine code. Readability and correctness in favor of raw speed.
+Extremely high speed eveluation of rules. No compilation to bare metal machine code. Readability and correctness in favor of raw speed.
 
 > [!WARNING]
 > wie kan beleid schrijven en vertaling naar code process makkelijk. niet per se code zo makkelijk dat iedereen het meteen gebruikt voor beleid maken. geen realistisch scenario. 
 
-A end-user friendly rule editing as main goal. The idea that domain experts use a high-level *domain specific language* and/or editor is attractive. It empowers smart people to implement changes in a policy themselves. When strongly believe in supporting such a way, though making that leading from the start may become a red herring in finding a solid base. We expect rules should be shared in a machine readable format too, for example. We have faith our axiomatic way of building higher level building blocks, bit by bit, will (among other things) also allow for highlevel rule representation that suits domain experts.
+A end-user friendly rule editing as main goal. The idea that domain experts use a high-level *domain specific language* and/or editor is attractive. It empowers smart people to implement changes in a policy themselves. When strongly believe in supporting such a way of working, though making that leading from the start may become a red herring in finding a solid base. We expect rules should be shared in a machine readable format too, for example. We have faith our axiomatic way of building higher level building blocks, bit by bit, will (among other things) also allow for high level rule representation that suits domain experts.
 
 It also leaves out typing of fields in domain objects. It can be very useful to spell out in great detail that the "price" information of an item costs is not simply "1.95", but that the precision is two digits, the currency is Euro and that is should be formatted as "€ 1,95". It is a complementary effort that MaxRegel can be extended with if required.
 

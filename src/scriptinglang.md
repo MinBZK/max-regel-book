@@ -13,16 +13,16 @@ We'll work up rules to become a programming language in itself. Not one that let
 
 Remember that we defined fact sets to have certain functionality baked in. Independent of whatever rules we are going to create, fact sets can do certain things themselves.
 
-| function name    | argument  | returns  | description                                                           |
-|------------------|-----------|----------|-----------------------------------------------------------------------|
-| `fs_create`      | facts     | factset  | create a new factset from the facts provided (as list, iterator, ...) |
-| `fs_iterate`     | -         | facts[]  | retrieve all fact objects contained                                   |
-| `fs_count`       | -         | integer  | retrieve the number of facts contained                                |
-| `fs_filter`      | predicate | factset  | retrieve only the facts that pass a given predicate/test              |
-| `fs_part_names`  | -         | string[] | retrieve all available part names this factset contains               |
-| `fs_get_part`    | part name | factset  | retrieve only the facts from a given part name                        |
-| `fs_set_part`    | part name | factset  | all facts now belong to a given part                                  |
-| `fs_remove_part` | part name | factset  | a factset containing all parts, but the one provided                  |
+| function name    | argument  | returns        | description                                                           |
+|------------------|-----------|----------------|-----------------------------------------------------------------------|
+| `fs_create`      | facts     | factset        | create a new factset from the facts provided (as list, iterator, ...) |
+| `fs_iterate`     | -         | list of facts  | retrieve all fact objects contained                                   |
+| `fs_count`       | -         | integer        | retrieve the number of facts contained                                |
+| `fs_filter`      | predicate | factset        | retrieve only the facts that pass a given predicate/test              |
+| `fs_part_names`  | -         | list of string | retrieve all available part names this factset contains               |
+| `fs_get_part`    | part name | factset        | retrieve only the facts from a given part name                        |
+| `fs_set_part`    | part name | factset        | all facts now belong to a given part                                  |
+| `fs_remove_part` | part name | factset        | a factset containing all parts, but the one provided                  |
 
 
 But those functions are not what a user of our rule engine will (often) use directly, though. Rules, as discussed before, are what a user applies to define some logic.
