@@ -1,0 +1,602 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Scripting: putting rules together - MaxRegel - Building a Rule Engine from the Ground Up</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MaxRegel - Building a Rule Engine from the Ground Up</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="scripting"><a class="header" href="#scripting">Scripting</a></h1>
+<p>We now have rules and fact sets (that rules always operate on) defined. Next, we’ll define some basic rules, that are simple in itself, but prove to be a useful toolbox to create higher level rules.</p>
+<p>Those higher level rules are closer to the domain we want to model, and are therefore more interesting ultimately.</p>
+<p>We’ll work up rules to become a programming language in itself. Not one that let’s you create games, but one dedicated to create logical systems.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>This chapter is about making basic things available for creating rules in a sensible way. This may be boring if you don’t feel too puristic about this endeavor. If you already believe that simple things such as “selecting facts based on some property”, or “counting them” and assigning them to some variable will be possible with <em>factsets</em> and the outlines for <em>rules</em>, you can make an evasive maneuver here, and skip boring/founding definitions. After all: <code>n =  getpart("persons"); filter(age &gt; 18); count</code> clearly means the number of persons older than 18, stored in a factset named “n”, right?</p>
+</div>
+<h2 id="basic-rules"><a class="header" href="#basic-rules">Basic rules</a></h2>
+<p>Remember that we defined fact sets to have certain functionality baked in. Independent of whatever rules we are going to create, fact sets can do certain things themselves.</p>
+<div class="table-wrapper"><table><thead><tr><th>function name</th><th>argument</th><th>returns</th><th>description</th></tr></thead><tbody>
+<tr><td><code>fs_create</code></td><td>facts</td><td>factset</td><td>create a new factset from the facts provided (as list, iterator, …)</td></tr>
+<tr><td><code>fs_iterate</code></td><td>-</td><td>list of facts</td><td>retrieve all fact objects contained</td></tr>
+<tr><td><code>fs_count</code></td><td>-</td><td>integer</td><td>retrieve the number of facts contained</td></tr>
+<tr><td><code>fs_filter</code></td><td>predicate</td><td>factset</td><td>retrieve only the facts that pass a given predicate/test</td></tr>
+<tr><td><code>fs_part_names</code></td><td>-</td><td>list of string</td><td>retrieve all available part names this factset contains</td></tr>
+<tr><td><code>fs_get_part</code></td><td>part name</td><td>factset</td><td>retrieve only the facts from a given part name</td></tr>
+<tr><td><code>fs_set_part</code></td><td>part name</td><td>factset</td><td>all facts now belong to a given part</td></tr>
+<tr><td><code>fs_remove_part</code></td><td>part name</td><td>factset</td><td>a factset containing all parts, but the one provided</td></tr>
+</tbody></table>
+</div>
+<p>But those functions are not what a user of our rule engine will (often) use directly, though. Rules, as discussed before, are what a user applies to define some logic.</p>
+<p>Some of those fact set functions are wrapped in rules, so they are accessible and can be reused easily.</p>
+<div class="table-wrapper"><table><thead><tr><th>rule name</th><th>argument</th><th>parameter</th><th>returns</th><th>description</th></tr></thead><tbody>
+<tr><td><code>count</code></td><td>factset</td><td>-</td><td>factset</td><td>fact set with single fact, with term <em>n = …</em></td></tr>
+<tr><td><code>filter</code></td><td>factset</td><td>predicate</td><td>factset</td><td>a subset of facts that obey the predicate</td></tr>
+<tr><td><code>get_part</code></td><td>factset</td><td>part name</td><td>factset</td><td>a factset with just the given part</td></tr>
+<tr><td><code>set_part</code></td><td>factset</td><td>part name</td><td>factset</td><td>a factset with all facts from all parts under a new name</td></tr>
+<tr><td><code>remove_part</code></td><td>factset</td><td>part name</td><td>factset</td><td>a factset containing all parts, but the one provided</td></tr>
+</tbody></table>
+</div>
+<p>Note that:</p>
+<ul>
+<li>the rule name is not prefixed with <code>fs_</code> (to denote the fact set variant).</li>
+<li>those rules internally use the fact set functions</li>
+<li>the argument is always a factset</li>
+<li>the result is always a factset</li>
+<li>a fixed parameter can be used (the predicate function, or part name) to instantiate the rule.</li>
+</ul>
+<h3 id="count-rule"><a class="header" href="#count-rule">Count rule</a></h3>
+<p>Determine the number of facts in the provided factset (independent of what part they belong to).</p>
+<p style="text-align:center"><img src="img/getpart-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="filter-rule"><a class="header" href="#filter-rule">Filter rule</a></h3>
+<p>Select just the facts that hold up to some test. This test (i.e. a predicate) looks at a certain field in the term of a fact (e.g. “age”) and compares that to constant.</p>
+<p style="text-align:center"><img src="img/filter-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="get-part-rule"><a class="header" href="#get-part-rule">Get part rule</a></h3>
+<p>Separate out all facts under a certain label, i.e. the part name.</p>
+<p style="text-align:center"><img src="img/getpart-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="remove-part-rule"><a class="header" href="#remove-part-rule">Remove part rule</a></h3>
+<p>Separate out all facts that are <em>not</em> under a certain label, i.e. the part name.</p>
+<p style="text-align:center"><img src="img/removepart-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="set-part-rule"><a class="header" href="#set-part-rule">Set part rule</a></h3>
+<p>Assign a new part name to all the facts in the factset.</p>
+<p style="text-align:center"><img src="img/setpart-rule.svg" alt="Fact set" height="350"></p>
+<h2 id="first-examples-with-rules"><a class="header" href="#first-examples-with-rules">First examples with rules</a></h2>
+<p>At this point we can already create some meaningful rules, given the basic ones we just introduced.</p>
+<p>Consider the following factset that contains a part <code>persons</code>: \(FS_{persons}\). We just show the terms as rows (not the metadata of the fact).</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th></tr></thead><tbody>
+<tr><td>Homer</td><td>short</td><td style="text-align: right">250</td><td style="text-align: right">36</td><td>male</td></tr>
+<tr><td>Marge</td><td>long</td><td style="text-align: right">150</td><td style="text-align: right">35</td><td>female</td></tr>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td></tr>
+<tr><td>Abe</td><td>short</td><td style="text-align: right">170</td><td style="text-align: right">70</td><td>male</td></tr>
+<tr><td>Selma</td><td>long</td><td style="text-align: right">160</td><td style="text-align: right">41</td><td>female</td></tr>
+<tr><td>Otto</td><td>long</td><td style="text-align: right">180</td><td style="text-align: right">38</td><td>male</td></tr>
+<tr><td>Krusty</td><td>middle</td><td style="text-align: right">200</td><td style="text-align: right">45</td><td>male</td></tr>
+</tbody></table>
+</div>
+<p>This determines the number of people:</p>
+<p>\[ \texttt{count}(FS_{persons}) \]</p>
+<p>Resulting in:</p>
+<div class="table-wrapper"><table><thead><tr><th>n</th></tr></thead><tbody>
+<tr><td>9</td></tr>
+</tbody></table>
+</div>
+<p>This selects the children:</p>
+<p>\[ \texttt{filter}_{age \leq 12 }(FS_{persons}) \]</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th></tr></thead><tbody>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td></tr>
+</tbody></table>
+</div>
+<p>And this the number of children, specifically taken from a part:</p>
+<p>\[ \texttt{count} (\texttt{filter}_{age \leq 12 }(\texttt{getpart}_{persons}(FS_{persons}))) \]</p>
+<div class="table-wrapper"><table><thead><tr><th>n</th></tr></thead><tbody>
+<tr><td>3</td></tr>
+</tbody></table>
+</div>
+<h2 id="compose-using-then"><a class="header" href="#compose-using-then">Compose using <em>Then</em></a></h2>
+<p>The last example shows we have to \( nest(every(functioncall(FS)))) \). Function composition is more convenient to click together two rules, and make it a new rule object (instead of the resulting value).</p>
+<p>\[ \texttt{count} \circ \texttt{filter}_{age \leq 12} \]</p>
+<p style="text-align:center"><img src="img/then-1-rule.svg" alt="Fact set" height="350"></p>
+<p>Here, \( \circ \), is the usual mathematical way to denote function (rule) composition. It performs the right-most function first, then the one on the left, etc.</p>
+<p>In programming, we would often like to think in data flows. First do this, then that, followed by that, etc. It is the same as function composition, but then works in the opposite direction. We will use the symbol <code>then</code>.</p>
+<p>\[   \texttt{filter}_{age \leq 12} ~ \texttt{then} ~ \texttt{count}  \]</p>
+<p style="text-align:center"><img src="img/then-2-rule.svg" alt="Fact set" height="350"></p>
+<p>Saying: filter them out by age, <em>then</em> count.</p>
+<p>So far we have seen rules that do something on data (factsets). But can create <code>then</code> as a rule in itself.</p>
+<p>\[ \texttt{then}_{rule_a, rule_b} =  rule_a ~ \texttt{then} ~ rule_b \]</p>
+<p><code>then</code> has two parameters that are rules themselves (e.g. <code>getpart</code> and <code>count</code>). When the <code>then</code> rule is applied, it evaluates the first rule \( rule_a \), and applies the second parameter, \( rule_b \) on that.</p>
+<p>And since we will use <code>then</code> a lot, it is better to keep it short. The semicolon, <code>;</code>,  means <code>then</code> as well.
+\[   \texttt{filter}_{age \leq 12} ~ \texttt{;} ~ \texttt{count}  \]</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>It may not sink in directly, but is elegant to learn that <em>composition of rules is a rule itself</em>.</p>
+</div>
+<h2 id="assigning-variablespart-names"><a class="header" href="#assigning-variablespart-names">Assigning variables/part names</a></h2>
+<p>At this point we have rules, that can be chained together into a single bigger rule. To improve readability (and therefore correctness and maintainability), we would want to give those rules meaningful names. For example:</p>
+<p>\[  \texttt{children} = \texttt{getpart}_{persons} ~ \texttt{then} ~ \texttt{filter}_{age \leq 12} ~ \texttt{then} ~ \texttt{count}  \]</p>
+<p>It turns out we can implement this assignment as a rule itself. When applied to a factset, \( FS \):</p>
+<ul>
+<li>It removes the part with the variable name (the left-hand-side). Maybe there was no such part, in which case it is unchanged. This reduced factset is now called \( FS’ \).</li>
+<li>It evaluates the right-hand-side, which is a (possibly composed) rule, that create a new factset.</li>
+<li>That factset will get the variable name as part name, \(FS_{var}\).</li>
+<li>The result is \( FS’ \) concatenated with \(FS_{var}\)<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup>.</li>
+</ul>
+<p>As you can see here, it is build up from basic rules we already know.</p>
+<p style="text-align:center"><img src="img/assign-rule.svg" alt="Fact set" height="350"></p>
+<p>And this is a more compact way to visualize the <code>assign</code> rule:</p>
+<p style="text-align:center"><img src="img/assign-2-rule.svg" alt="Fact set" height="350"></p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>The same as for <code>then</code> rules… funny that you can create new variables entirely from the definition of rules and factsets, right? At least from a programming laguage perspective, that is.</p>
+</div>
+<h2 id="celebrating-axiomatic-thinking"><a class="header" href="#celebrating-axiomatic-thinking">Celebrating axiomatic thinking</a></h2>
+<p>When we first discussed <em>facts</em>, <em>factsets</em> and <em>rules</em>, it probably seemed a bit boring. But here we are: we have built a logical programming language,from those ingredients and nothing more.</p>
+<p>The fact that we can just keep transforming factsets with rules, and get additional high level features like assigning intermediate variables and chaining rules to keep things organized <em>almost for free</em>, is great.</p>
+<h2 id="extending-the-toolbox"><a class="header" href="#extending-the-toolbox">Extending the toolbox</a></h2>
+<p>We have some first rules to recombine parts: <code>getpart</code>, <code>removepart</code>, <code>concatenate</code>, that allow us to recombine fact sets by things from here and add them there, all with a single factset argument and result. There are many useful transformations thinkable, that may come in handy when defining higher level rules.</p>
+<h3 id="aggregations"><a class="header" href="#aggregations">Aggregations</a></h3>
+<p>An aggregate rule is a function where multiple values are processed together to form a single summary statistic.</p>
+<p>Parameters:</p>
+<ul>
+<li>field to group by (e.g. “gender”)</li>
+<li>field for the value to use (e.g. “age”)</li>
+<li>function to reduce the selected value into a single one</li>
+</ul>
+<p><strong>Example</strong>:
+\[ \texttt{aggregate}_{gender, age, max}  \]</p>
+<div class="table-wrapper"><table><thead><tr><th>gender</th><th style="text-align: right">aggregate_max_age</th></tr></thead><tbody>
+<tr><td>male</td><td style="text-align: right">70</td></tr>
+<tr><td>female</td><td style="text-align: right">41</td></tr>
+</tbody></table>
+</div>
+<h3 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h3>
+<p>Apply an arithmetic of two fields of two factset selections.</p>
+<p>Parameters:</p>
+<ul>
+<li>the function to apply (e.g. +, -, *, /)</li>
+<li>the rule that selects the first argument (the first field of the first fact’s term is used)</li>
+<li>the rule that selects the second argument (the first field of the first fact’s term is used)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<p>This factset contains two parts:</p>
+<ul>
+<li>revenue</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>r</th><th>project</th></tr></thead><tbody>
+<tr><td>5</td><td>A</td></tr>
+<tr><td>4</td><td>B</td></tr>
+<tr><td>3</td><td>C</td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>expense</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>e</th></tr></thead><tbody>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody></table>
+</div>
+<p>Then</p>
+<p>\[ \texttt{arithmetic}_{-, \texttt{getpart}(“revenue”), \texttt{getpart}(“expense”)}  \]</p>
+<p>yields:</p>
+<div class="table-wrapper"><table><thead><tr><th>x</th></tr></thead><tbody>
+<tr><td>4.0</td></tr>
+<tr><td>2.0</td></tr>
+</tbody></table>
+</div>
+<h3 id="const"><a class="header" href="#const">Const</a></h3>
+<p>Some constant value.
+Always evaluates to the given factset, ignoring its factset input argument. This is a way to convert a factset into a rule.</p>
+<p><strong>Example</strong>:</p>
+<p>If we have a factset with an “expense” part:</p>
+<div class="table-wrapper"><table><thead><tr><th>e</th></tr></thead><tbody>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody></table>
+</div>
+<p>and want to use <code>arithmetic</code> to add 1, this number is first wrapped in a term (<code>{x: 1}</code>), then in a fact, then into a factset with this fact, and then to a rule that is expected as parameter.</p>
+<p>\[ \texttt{arithmetic}_{-, \texttt{getpart}(“revenue”), \texttt{const}(1)}  \]</p>
+<p>yields:</p>
+<div class="table-wrapper"><table><thead><tr><th>x</th></tr></thead><tbody>
+<tr><td>2</td></tr>
+<tr><td>3</td></tr>
+</tbody></table>
+</div>
+<h3 id="identity"><a class="header" href="#identity">Identity</a></h3>
+<p>A rule that does nothing to its input argument and just returns it. This sounds unnecessary, but some other rules may require a rule that creates a selection of some sort. If you want to just want to use all provided facts, <code>identity</code> can be used to achieve that.</p>
+<p>If we have a factset with an “expense” part:</p>
+<div class="table-wrapper"><table><thead><tr><th>e</th></tr></thead><tbody>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody></table>
+</div>
+<p>and want to use <code>arithmetic</code> to add 1, instead of writing
+\[ \texttt{arithmetic}_{-, \texttt{getpart}(“revenue”), \texttt{const}(1)}  \]
+One can as well write:
+\[ \texttt{arithmetic}_{-, \texttt{identity}, \texttt{const}(1)}  \]</p>
+<p>to yield:</p>
+<div class="table-wrapper"><table><thead><tr><th>x</th></tr></thead><tbody>
+<tr><td>2</td></tr>
+<tr><td>3</td></tr>
+</tbody></table>
+</div>
+<h3 id="join"><a class="header" href="#join">Join</a></h3>
+<p>Join two selections on the given field. It merges two facts into one.</p>
+<p>Given this factset that defines titles by gender, \(FS_{titles}\),</p>
+<div class="table-wrapper"><table><thead><tr><th>gender</th><th style="text-align: left">title</th></tr></thead><tbody>
+<tr><td>male</td><td style="text-align: left">Mr.</td></tr>
+<tr><td>female</td><td style="text-align: left">Ms.</td></tr>
+</tbody></table>
+</div>
+<p>we can augment \(FS_{persons}\) with this extra infomation using:</p>
+<p>\[ \texttt{join}_{gender}(FS_{persons}, FS_{titles})  \]</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th><th>title</th></tr></thead><tbody>
+<tr><td>Homer</td><td>short</td><td style="text-align: right">250</td><td style="text-align: right">36</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Marge</td><td>long</td><td style="text-align: right">150</td><td style="text-align: right">35</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Abe</td><td>short</td><td style="text-align: right">170</td><td style="text-align: right">70</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Selma</td><td>long</td><td style="text-align: right">160</td><td style="text-align: right">41</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Otto</td><td>long</td><td style="text-align: right">180</td><td style="text-align: right">38</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Krusty</td><td>middle</td><td style="text-align: right">200</td><td style="text-align: right">45</td><td>male</td><td>Mr.</td></tr>
+</tbody></table>
+</div>
+<h3 id="select-fields"><a class="header" href="#select-fields">Select fields</a></h3>
+<p>Just pick certain fields (columns) from each fact’s terms.</p>
+<p>\[ \texttt{select}_{age, hair}(FS_{persons})  \]</p>
+<p>yields:</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: right">age</th><th>hair</th></tr></thead><tbody>
+<tr><td style="text-align: right">36</td><td>short</td></tr>
+<tr><td style="text-align: right">35</td><td>long</td></tr>
+<tr><td style="text-align: right">10</td><td>short</td></tr>
+<tr><td style="text-align: right">8</td><td>middle</td></tr>
+<tr><td style="text-align: right">1</td><td>middle</td></tr>
+<tr><td style="text-align: right">70</td><td>short</td></tr>
+<tr><td style="text-align: right">41</td><td>long</td></tr>
+<tr><td style="text-align: right">38</td><td>long</td></tr>
+<tr><td style="text-align: right">45</td><td>middle</td></tr>
+</tbody></table>
+</div>
+<h2 id="return-if"><a class="header" href="#return-if">Return if</a></h2>
+<p><em>Return if</em> helps handle different cases to determine a returned value.</p>
+<p>Say we are in front of a traffic light, then <em>green</em> means ‘go’ and <em>red</em> means “stop”, or “don’t go”.</p>
+<p>In our rule engine, we can say there is a traffic light factset:</p>
+<div class="table-wrapper"><table><thead><tr><th>light</th></tr></thead><tbody>
+<tr><td>“red”</td></tr>
+</tbody></table>
+</div>
+<p>or</p>
+<div class="table-wrapper"><table><thead><tr><th>light</th></tr></thead><tbody>
+<tr><td>“green”</td></tr>
+</tbody></table>
+</div>
+<p>and we want to derive a new fact set:</p>
+<div class="table-wrapper"><table><thead><tr><th>go</th></tr></thead><tbody>
+<tr><td>false</td></tr>
+</tbody></table>
+</div>
+<p>or</p>
+<div class="table-wrapper"><table><thead><tr><th>go</th></tr></thead><tbody>
+<tr><td>true</td></tr>
+</tbody></table>
+</div>
+<p>In most programming languages you can do something like this:</p>
+<pre><code class="language-js">if (light == "green") {
+    return {"go": True}
+}
+
+return {"go": False}
+</code></pre>
+<p>So, <em>if</em> some condition holds, <em>return</em> the corresponding value, <em>else</em> just continue with the next lines. In this case that turns out to be returning another value. <em>Returning</em> is as much delivering the “final value”.</p>
+<p>Writing</p>
+<pre><code class="language-js">if *condition* {
+    return expression
+}
+</code></pre>
+<p>in similar function as before, we get:</p>
+<p>\[ \texttt{return_if}(condition, rule)  \]</p>
+<p>Here</p>
+<ul>
+<li><em>condition</em> is a predicate; a test that takes a factset as an argument and returns <code>true</code> or <code>false</code>. It is a little expression that says: this property must equal this or that. Or: this must be greater than some value. In our example of persons: <code>age &gt; 18</code>, or so.</li>
+<li><em>expression</em> is some value you want to use later. In this case a <em>go</em> or <em>no go</em> value. As a factset of course, since this is the way we do things.</li>
+</ul>
+<p>A rule is often composed: do something <em>then</em> something else <em>then</em> more…
+With a “return_if” somewhere in this chain, we can decide to stop halfway, if the conditions are right. It lets you define shortcuts in you logic flow.</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>In the chapter about factsets we briefly mentioned the efficient concatenated factset, used here. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="rules.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="examples.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="rules.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="examples.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

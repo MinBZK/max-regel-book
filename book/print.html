@@ -1,0 +1,2018 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>MaxRegel - Building a Rule Engine from the Ground Up</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MaxRegel - Building a Rule Engine from the Ground Up</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<p style="text-align:center"><img src="img/front.svg" alt="Front" height="650"></p><div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+<p>This document serves as an introduction to the concepts, design and implementation of our rule system, named MaxRegel.</p>
+<p>A rule engine is a software system that makes decisions based on a set of rules. Instead of writing a lot of complex code, you list the rules, and the engine figures out what to do based on the facts it knows.</p>
+<p>A rule engine helps organizations make decisions automatically and consistently. Instead of relying on people to remember and apply many rules by hand, the engine checks information against clear “if this, then that” instructions. This means decisions can be made faster, with fewer mistakes, and in the same way every time. Another benefit is flexibility: rules can be updated or added without changing the whole system, making it easier to adapt when policies, regulations, or business needs change. Overall, a rule engine saves time, reduces errors, and ensures that important decisions follow the right guidelines.</p>
+<p>Rule engines are a great place for multidisciplinary teams, connecting coders and policymakers.
+By translating a policy to formal rules, you can validate if an automated process is matching the intended goal. That makes rule engines a communication medium for different roles in an organization.</p>
+<p>This document is structured as follows:</p>
+<ul>
+<li><strong>Background</strong>: covering general information about rule systems.</li>
+<li><strong>Design</strong>: what goals, non-goals, insight make up the wishlist of our system.</li>
+<li><strong>Modelling</strong>: structuring the data we need to process, and the processing itself.</li>
+</ul>
+<p>Then some implementation notes and further concerns are covered.</p>
+<p>The design is presented in a bottom-up fashion. First principles are established on which we can build up more and more functionality.
+At the risk of being more tedious, it exposes the way of thinking that went into creating the system.</p>
+<p>In a way it also tries to promote an axiomatic, bottom-up, way of approaching such a system.
+It shows paying attention to detail early on, making strict choices, saves work later on, and keeping the rigor.</p>
+<h2 id="audience"><a class="header" href="#audience">Audience</a></h2>
+<p>A demonstration to designing a formal reasoning system and a way to implement it in software.</p>
+<p>This is of interest to anyone that deals with, or creates policies. What makes a good policy?
+Can we design it in such a way it can be easily executed by computers?</p>
+<p>The actual implementation in software is not covered in depth, so you don’t have to be a programmer.</p>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>Note there is an appendix covering some technical terminology at the end.</p>
+</div>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>Sometimes you may encounter so-called JSON to express data (e.g. <code>{"name": "John", "age": 35}</code>). In case you are not familiar with this notation, we’ll trust you imagination will get across the main idea. Otherwise, it is briefly discussed in an appendix to help that imagination.</p>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="background"><a class="header" href="#background">Background</a></h1>
+<p>Here we take a closer look into <em>rule engines</em>, or <em>inference systems</em>, in general.
+By taking a step back and become more a bit more philosophical, the choices we can make when implementing such a system become more apparent. That can then feed into the design decisions later on.</p>
+<h2 id="rule-engines"><a class="header" href="#rule-engines">Rule engines</a></h2>
+<p>A rule engine is a software system that makes decisions based on a set of “if-this-then-that” rules. Instead of writing a lot of complex code, you just list out the rules, and the engine figures out what to do based on the facts it knows.</p>
+<h3 id="example-personal-discount-ticket"><a class="header" href="#example-personal-discount-ticket">Example: Personal Discount Ticket</a></h3>
+<ul>
+<li><strong>Rule</strong>: If a person is a member and the total is over $100, give 10% off.</li>
+</ul>
+<p>The engine checks if both conditions are true, and if so, applies the discount.</p>
+<h3 id="example-family-discount-ticket"><a class="header" href="#example-family-discount-ticket">Example: Family Discount Ticket</a></h3>
+<ul>
+<li><strong>Rule</strong>: If the group consists of more than 2 members, all persons younger than 12 years get 50% off.</li>
+</ul>
+<p>The engine checks the group of people, finds the kids if there are any, and and if so, applies the discount.</p>
+<h3 id="example-combined-discount"><a class="header" href="#example-combined-discount">Example: Combined Discount</a></h3>
+<ul>
+<li><strong>Rule</strong>: If there is Family Discount use that, otherwise consider the personal discount. If both don’t hold, give 5% discount on week days.</li>
+</ul>
+<p>This rule combines the previous rules into one, and adds another case as backup.</p>
+<p>So, why use a Rule Engine?</p>
+<ul>
+<li>
+<p>Easier to change rules without touching the main code.</p>
+</li>
+<li>
+<p>Great for systems with lots of conditions, like fraud detection, insurance claims, or benefit systems.</p>
+</li>
+</ul>
+<p>In short, a rule engine helps automate decisions by separating logic (rules) from code. This benefits flexibility, clarity and correctness. Sometimes the term <em>business rules</em> is used, to emphasize the rules are about higher level domain knowledge, as opposed to some operational details in the operation of the software.</p>
+<h2 id="automation-strategies"><a class="header" href="#automation-strategies">Automation strategies</a></h2>
+<p>If we understand a problem so well, that we can <em>even</em> explain it to a computer, than we are on the right track. It means the domain knowledge, the data and rules, are formalized and can be handled by software for automatically determining the consequences.</p>
+<p>A simple inference engine cycles through all rules, and execute them as they come along. The execution of the rules will often result in new facts or goals being added to the knowledge base, which will trigger the cycle to repeat. This cycle continues until no new facts emerge.</p>
+<p>In case of the <em>Combined Discount</em> example, the first part checks the <em>Family discount</em> rule. That one in turn needs to check the group size first. It may emit the group size as a new fact: <code>count: 4</code>. It may then add a new fact <code>kids_count: 2</code>. Both of those new facts can yield yet another new fact: <code>apply_family_discount: true</code>. Adding more and more small facts can lead to higher level facts.</p>
+<p>This approach of (blindly) generating all the possible facts from given input facts is called <em>forward chaining</em>. By creating new facts from initial facts, and chain those in turn for yet another round of new facts, etcetera, all new facts show up at some point. Clearly, some facts will never emerge if the input conditions are not met.</p>
+<p>Another approach, <em>backward chaining</em>, looks at the facts you would like to proof first, checks what rules need to be satisfied with all currently known facts. Otherwise, it tries to find rules to satisfy <em>those</em> facts in turn first, and so on. From the goal, you “chain the rules backward” all the way and see if the required input facts are there.</p>
+<p>Both approaches have their <em>pros</em> and <em>cons</em>.</p>
+<div class="table-wrapper"><table><thead><tr><th>Feature</th><th>Forward Chaining</th><th>Backward Chaining</th></tr></thead><tbody>
+<tr><td>Direction</td><td>Facts → Conclusions</td><td>Goal → Needed facts</td></tr>
+<tr><td>Best for</td><td>Real-time updates, inference</td><td>Answering specific queries</td></tr>
+<tr><td>Think like</td><td>Detecting all what can happen</td><td>Finding out how to reach a goal</td></tr>
+<tr><td>Example</td><td>The system starts with what it already knows about a person, then applies rules step by step to see what conclusions it can reach.</td><td>The system starts with a question, for example, “Does this person get a discount?”, and then works backwards to check what facts or conditions would need to be true.</td></tr>
+</tbody></table>
+</div>
+<p>Our system uses forward chaining, the more data-driven approach. It’s strong points are:</p>
+<ul>
+<li>
+<p>When you start with known facts and want to discover <em>all possible conclusions</em>. This is convenient when, at different stages, intermediate conclusions are relevant for other parts of an organization, without enumerating all possible relevant facts for external or future systems.</p>
+</li>
+<li>
+<p>When new data is constantly coming in, and you want the system to react to it automatically.</p>
+</li>
+</ul>
+<p>It comes at the price of being more wasteful: many facts <em>may</em> be generated that are irrelevant for some application. You are generating more data than needed. Computers are fast, so it does not have to be a real problem in that sense, but it goes against our <em>data minimalization</em> design goal described in the next chapter. Luckily, there exist ways to limit the data being generated by prioritizing rules.</p>
+<h2 id="modelling"><a class="header" href="#modelling">Modelling</a></h2>
+<p>Next we’ll see how such a system can be put together, by exploring <em>modelling</em> a bit further.</p>
+<p>Modeling, in simple terms, means creating a simplified, structured representation of something from the real world—like a map for a city, but for ideas, systems, or processes. Instead of working with the messy, complicated real thing, you make a formal version that captures the important parts so you can understand, analyze, or predict.</p>
+<p>In case of a rule engine, writing down rules and facts in a structured way is a model of decision-making.</p>
+<p>The benefits of having a model are:</p>
+<ul>
+<li>
+<p><strong>Communication</strong>: It forces you to think clearly and remove ambiguity. Everyone can follow the same formal representation. A model is a common language for different stakeholders (business, developers, scientists).</p>
+</li>
+<li>
+<p><strong>Exploration</strong>: You can analyse “What if?” scenarios safely—without breaking the real system.</p>
+</li>
+<li>
+<p><strong>Automation</strong>: Computers can work with a formal model to simulate, optimize, or make decisions. Also mistakes can be spotted early on. When systems grow, a well-made model makes it easier to maintain and extend.</p>
+</li>
+</ul>
+<p>How much detail of the real world do you want to include, when designing a model? Often there is a tradeoff between:</p>
+<ul>
+<li><strong>Simplicity</strong>: The simpler, the easier it is to comprehend. But if it is too simple, you won’t be able to spell out the things you want.</li>
+<li><strong>Expressiveness</strong>: The more details, the more realistic and general purpose the model is. But if it is too generic you can possibly express much more than needed, things that may not have a relation with the reality anymore. Or it carries over too much complexity to be of help in the first place.</li>
+</ul>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>The term “modelling” is used for many different things. Here we use it exclusively for the “reasoning with data and rules” part. Other interesting things, like how this would fit in some IT landscape (i.e. “domain architecture modelling”) concerning other systems, access management, auditing for example, are out of scope.</p>
+</div>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="design"><a class="header" href="#design">Design</a></h1>
+<p>Here we lay out the key drivers to embark on the creation of a new rule engine.
+By identifying design issues and choices before diving in into the weeds of the system’s building blocks, the “why” should be more clear. Next we will look at goals, non-goals and consider some cross-cutting concerns.</p>
+<p>A generic rule engine can take many shapes and forms. Here we try to identify the elements that are dear to us, placing the MaxRegel rule engine in the broader space of related systems.</p>
+<h2 id="goals"><a class="header" href="#goals">Goals</a></h2>
+<p>When choosing or building a rule engine, organizations care about more than just “does it work?” They need systems that are trustworthy, adaptable, and sustainable. The design goals of this engine focus on exactly those concerns: <strong>transparency</strong> ensures decisions can be explained to users and auditors; <strong>correctness</strong> builds confidence that outcomes are reliable; <strong>scalability</strong> makes the system practical for real-world volumes of data and rules; <strong>expressiveness</strong> allows complex business logic to be modeled without friction; <strong>maintainability</strong> keeps long-term costs low and avoids dependency risks; minimalization prevents bloat and confusion; <strong>extensibility</strong> makes the system future-proof and integrable with other tools; <strong>rule/data minimalization</strong> avoids retrieving more data than needed to get answers; and <strong>layered rule definition</strong> offers flexibility for both technical and non-technical teams. Together, these principles align the engine with the priorities of organizations that value clarity, performance, and long-term resilience.</p>
+<p>We will look at those goals in more detail:</p>
+<h3 id="transparency"><a class="header" href="#transparency">Transparency</a></h3>
+<p>The engine should make its reasoning visible. Users should be able to see why a decision was made.</p>
+<p>This means full traceability: a clear record of which rules fired, in what order, and which facts were used to reach a conclusion.</p>
+<p>Not all users need the same level of transparency. A customer getting a discount may be happy enough with “seasonal discount”, where a customer support “user” of the rule engine would like to see more details of why this customer was or was not eligible in order to resolve disputes. A marketing team would like to make clear what customer journeys lead to what discounts for improved targeting.</p>
+<h3 id="correctness"><a class="header" href="#correctness">Correctness</a></h3>
+<p>The engine should be trustworthy. Rules should work as expected and give predictable results.</p>
+<p>Achieved by breaking logic into small, testable building blocks. Each part can be proven correct individually, reducing errors in the larger system. Smaller blocks can be more easily understood and checked if they encode the desired behavior. It is a “divide and conquer” approach to correctness.</p>
+<h3 id="scalability"><a class="header" href="#scalability">Scalability</a></h3>
+<p>The engine should handle large workloads without slowing down. It should work quickly even with many rules and lots of data.</p>
+<ul>
+<li>Performance: Complex rule sets should process thousands of cases per second, enabling use cases like running simulations during policy design.</li>
+<li>Connectivity: Can pull in data from external sources (databases, REST APIs, etc.) as part of its reasoning.</li>
+</ul>
+<h3 id="expressiveness"><a class="header" href="#expressiveness">Expressiveness</a></h3>
+<p>The engine should let you describe logic in powerful ways.</p>
+<ul>
+<li>Tools to work with facts: You can transform, filter, and combine data however you need to create new insights (fact sets) in order to capture the logic you want.</li>
+<li>Declarative style: The order of rules and facts doesn’t matter, making it easier to compose small pieces into larger systems. For example, <em>“people under 12 are young”</em> and <em>“young people get a discount”</em>, leads to the same conclusions if the order of those rules is changed: <em>“young people get a discount”</em> and <em>“people under 12 are young”</em>. That is quite obvious here, but in larger systems this makes it easier to read rules by themselves, instead of knowing the order of their contextual rules.</li>
+</ul>
+<h3 id="maintainability"><a class="header" href="#maintainability">Maintainability</a></h3>
+<p>The system should be easy to understand, change, and extend over time. Built simply, without unnecessary complexity.</p>
+<ul>
+<li>From the ground up: pure operations, minimal moving parts. For organizations this is a way to keep long-term costs low.</li>
+<li>No external dependencies: avoids breaking changes from outside libraries and avoids bloat from unused features. It also is a safety when a software vendor runs out of business; rule engines quickly become core to an organization and external risks should be minimized.</li>
+</ul>
+<h3 id="ruledata-minimalization"><a class="header" href="#ruledata-minimalization">Rule/Data Minimalization</a></h3>
+<p>The engine should keep rules and data as simple and focused as possible. Avoid processing data that may not be needed for improved privacy.</p>
+<p>For example, when we can already see a customer is a member, and therefore will receive a discount, another rule checking the same discount based on a more privacy-sensitive age data can be omitted.</p>
+<p>Also, the data needed for performing the logic of a rule, should not have to be copied over to the rule engine. The rule engine would just connect to a part of an external database, making privacy (GDPR) compliance easier.</p>
+<p>Lean models and concise rules reduce maintenance and improve clarity. When an (intermediate) conclusion can already be made, there is no need to collect more (unnecessary) data.</p>
+<h3 id="extensibility"><a class="header" href="#extensibility">Extensibility</a></h3>
+<p>The engine should support new ideas and integrations without major rewrites. Eventhough you never know what the future you bring, allowing adaptability makes a rule engine more sustainable. One can add new functionality and connect to other systems with ease.</p>
+<p>Forward chaining generates all possible new facts, not just those needed for one outcome.
+These facts can be shared with other systems (e.g., via message queues) at any stage of processing.</p>
+<p>In our discount example, when determining the number of kids in a family, this is done for determining the discount. But that number may itself be fed into a fraud detection system. E.g. “more than 100 children in one family generates an alert of possible fraud”. Or, for people receiving a discount, send some happy email to offer them next month another benefit.</p>
+<p>Another way to look at extensibility is to ensure no proprietary software is needed to edit rules. Complicated and closed formats for storing rules may one day be a liability: what if the software company ceases to support the required software? An open (text-based) format for rules leaves the door open to create an alternative way of reusing those rules previously defined.</p>
+<hr />
+<p>Some goals can easily be married using the right implementation strategy. For example, an external-dependency-free approach, is part of simplicity, which aids <em>transparency</em> and <em>correctness</em>. But our need for expressiveness can clearly compete with other goals.</p>
+<p>Also note that our choice of “forward chaining” inference engine possibly uses and creates more data than strictly needed for an application. Our goal of <em>data minimization</em> contradicts the forward chaining approach[^note-dm].</p>
+<p>[^note-dm] In the “Scripting” chapter you’ll learn that rules can be cut short (or prioritized) by using <code>return_if</code> rules to support a level of data minimization.</p>
+<p>All in all, designing this system is therefore a balancing act.</p>
+<h2 id="non-goals"><a class="header" href="#non-goals">Non-goals</a></h2>
+<p>Overly generic. It is not a replacement for a full-fledged logical programming language, such as Prolog. General programming languages allow you to build anything, from rule engines to games. It comes at the price complexity with little aid to spell out you specific business logic.</p>
+<p>Extremely high speed eveluation of rules. No compilation to bare metal machine code. Readability and correctness in favor of raw speed.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>wie kan beleid schrijven en vertaling naar code process makkelijk. niet per se code zo makkelijk dat iedereen het meteen gebruikt voor beleid maken. geen realistisch scenario.</p>
+</div>
+<p>A end-user friendly rule editing as main goal. The idea that domain experts use a high-level <em>domain specific language</em> and/or editor is attractive. It empowers smart people to implement changes in a policy themselves. When strongly believe in supporting such a way of working, though making that leading from the start may become a red herring in finding a solid base. We expect rules should be shared in a machine readable format too, for example. We have faith our axiomatic way of building higher level building blocks, bit by bit, will (among other things) also allow for high level rule representation that suits domain experts.</p>
+<p>It also leaves out typing of fields in domain objects. It can be very useful to spell out in great detail that the “price” information of an item costs is not simply “1.95”, but that the precision is two digits, the currency is Euro and that is should be formatted as “€ 1,95”. It is a complementary effort that MaxRegel can be extended with if required.</p>
+<h2 id="cross-cutting-concerns"><a class="header" href="#cross-cutting-concerns">Cross-cutting concerns</a></h2>
+<p>Things that are not goals themselves, but are expected to be important for a successful solution are described here.</p>
+<h3 id="simplicity"><a class="header" href="#simplicity">Simplicity</a></h3>
+<p>Keeping the system <em>simple</em> is… not so simple, given our goals. If we keep it as simple as possible it is more likely to be future-proof.</p>
+<p>Simplicity can show at different levels:</p>
+<ul>
+<li>Ensuring a small code base for the rule engine.</li>
+<li>No fancy language features. Rather implement the rule engine with a few more lines of code, than cryptic/smart one-liners.</li>
+<li>No or limit external dependencies.</li>
+</ul>
+<h3 id="multiple-abstraction-levels-for-writing-rules"><a class="header" href="#multiple-abstraction-levels-for-writing-rules">Multiple Abstraction Levels for Writing Rules</a></h3>
+<p>We know simplicity and expressiveness are at fundamental odds with one another for many domains.
+A very complicated rule in real life would require the rule engine to have advanced and complicated features to capture the logic accurately. But complicated features make it error-prone, and limit maintainability and transparency.</p>
+<p>Therefore, a goal is to support multiple ways of writing rules, using at different levels of abstraction. That allows you to use a clearer rule, say 90% of the time. But there is an escape hatch for the other complicated 10%. Those rule can then be coded in a less user-friendly way, but gets the job done. It allows one to write rules in a way that fits your needs.</p>
+<div class="table-wrapper"><table><thead><tr><th>Level</th><th>Expressiveness</th><th>simplicity</th><th>Write a rule…</th></tr></thead><tbody>
+<tr><td>raw programming language</td><td>\( \star \star \star \star \)</td><td>\( \star \)</td><td>in a full fletched programming language with all possibilities and pitfalls.</td></tr>
+<tr><td>combinator library</td><td>\( \star \star \star \)</td><td>\( \star \star \)</td><td>using reusable function of the inference engine in code.</td></tr>
+<tr><td>fluent API</td><td>\( \star \star \)</td><td>\( \star \star \star \)</td><td>like an embedded Domain Specific Language (DSL) within code.</td></tr>
+<tr><td>rule scripting language</td><td>\( \star \star \)</td><td>\( \star \star \star \star \)</td><td>in the most human readable, yet formal, way possible as external scripts, not requiring the hosting programming language the rule engine is written in.</td></tr>
+</tbody></table>
+</div>
+<p>A special mention is a rule exchange format, in a way that external DSL editors (such as Jetbrains Meta Programming System, MPS). This is out of scope for this document, but would likely tap into the <em>combinator library</em> level.</p>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="facts"><a class="header" href="#facts">Facts</a></h1>
+<p>Let’s define the data structure for storing <em>facts</em>.
+Facts are the basic building block for storing data. If we make sure that input, intermediate and output data is always structured the same, it facilitates creating processing pipeline that click together easily.</p>
+<p>We’ll split storing data for facts into two parts:</p>
+<ul>
+<li>The <em>term</em>, which is the “meat” of the data.</li>
+<li>The <em>info</em>, which is the metadata</li>
+</ul>
+<p>Next, those parts are explained further.</p>
+<h2 id="term-core-information"><a class="header" href="#term-core-information">Term: core information</a></h2>
+<p>When dealing with rules, we want our data to be chunked in meaningful objects, containing the information you actually care about.</p>
+<p>For example, we want to define a <code>person</code> that consists of a <code>name</code> and an <code>age</code>.</p>
+<p style="text-align:center"><img src="img/term.svg" alt="A term" height="150"></p>
+<p>In our terminology, we’ll say that the <em>term</em> <code>person</code> has two fields. A field has a <em>key</em> (the name of the variable) and an actual <em>value</em>. In JSON notation, this looks as follows:</p>
+<pre><code class="language-json">person = {
+  "name": "Bart",
+  "age": 10
+}
+</code></pre>
+<p>An <code>address</code> can be another term, with fields <code>street</code>, <code>house_number</code>, <code>city</code> etc.</p>
+<p>Those simple objects are commonly referred to <em>domain objects</em>, <em>model objects</em>, <em>(named) tuples</em> or <em>terms</em>. We use the latter, “Term”, to denote a defined part from the domain of discourse.</p>
+<p>The keys of a term, could in theory be anything, but for mental comfort we’ll limit them to lower cased names, possibly separated by an underscore ( _ ).</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>Note that we don’t assume any validity checking on fields at this stage, such (dis)allowing missing data, or formats in which dates should be written. Later on, you can use rules to check if terms are valid.</p>
+</div>
+<h2 id="info-meta-data"><a class="header" href="#info-meta-data">Info: Meta data</a></h2>
+<p>The meta data, or simply called <em>info</em> here, is in a way of secondary importance.</p>
+<p style="text-align:center"><img src="img/info.svg" alt="Meta data" height="150"></p>
+<p>The <em>actual</em> data is the <em>term</em>, but for example:</p>
+<ul>
+<li>the source of a term (is this <code>person</code> data coming from social media, an address book, a government API?)</li>
+<li>the date this data was created</li>
+<li>what previous rules provided this data, for tracing back how this person is processed in the rule engine.</li>
+</ul>
+<p>The latter shows how <em>info</em> can be used by the rule engine for certain bookkeeping.</p>
+<p>Like terms, <em>info</em> is organized in key-value pairs.</p>
+<h2 id="facts-terms-with-meta-data"><a class="header" href="#facts-terms-with-meta-data">Facts: Terms with meta data</a></h2>
+<p>Facts will form the unit of individual data points, for the remaining discussion of the system, since it is the combination of “normal” data (the <em>term</em>) and meta data (the <em>info</em>), and therefore contains all we need.</p>
+<p style="text-align:center"><img src="img/fact-eq.svg" alt="A fact" height="150"></p><div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="fact-sets"><a class="header" href="#fact-sets">Fact sets</a></h1>
+<p>In our rule engine, you would think we make <em>facts</em> the core unit to reason about.
+After all, it contains all data (and metadata) you want to consider when inferring more facts.</p>
+<p>MaxRegel makes <em>fact sets</em> the central data element of computation.
+A fact set is a collection of facts and can contain any number of elements.
+Sets can be empty, have a single fact, … a million.</p>
+<p>A fact set can be visualized as a box containing the facts.</p>
+<p style="text-align:center"><img src="img/factset.svg" alt="Fact set" height="150"></p>
+<p>This adds extra expressivity to the things we can later ask about data, making it possible to write more complex logic in our rule system.</p>
+<p>Not only can we ask: “Is this person older than 12 years old”, considering just a single fact, but also:
+“How many people older that 12 are in this group of people”, considering a (sub)groups of facts.</p>
+<p>Without support for fact sets, this last example would rely on some predefined, hard coded rule to extract those people. This logic would then reside outside the rule system, making it inflexible. Another take could add a field <code>lives_at_address_and_is_older_than_35</code> for each individual, making it an intrinsic property. That feels also very arbitrary and is equally inflexible.</p>
+<h2 id="parts-organizing-fact-sets"><a class="header" href="#parts-organizing-fact-sets">Parts: Organizing fact sets</a></h2>
+<p>So went from facts to fact sets as data unit for rules to process. We’ll add another feature to those fact sets: a way to organize <em>parts</em> in a factset.</p>
+<p>A part in a factset is essentially a subset, i.e. a section of facts that belong together under a label (the part name). For example, a factset may contain <code>persons</code>, <code>locations</code>, <code>vehicles</code>, … Think of them as lists of facts that can be easily selected.</p>
+<p style="text-align:center"><img src="img/factset-labeled.svg" alt="Fact set with parts" height="150"></p>
+<p>We now visualize single factset as a stack of boxes. Those boxes with different colors are the parts. The individual facts (spheres) are not drawn anymore: the boxes still contain any number of facts, though.</p>
+<p>Later on, when we introduced different tools to filter or join fact sets, we can use parts to add new subsets under different labels.</p>
+<p>Note that parts are the names that exist in the fact set, but that this name is not a part of the Fact’s term or info. In that sense, it is just an additional label.</p>
+<h2 id="unified-data-one-format-to-rule-them-all"><a class="header" href="#unified-data-one-format-to-rule-them-all">Unified data: one format to rule them all</a></h2>
+<p>The possibility to have parts in a factset is a nice addition, but it is not an optional one. The structure of terms, wrapped in facts, wrapped in factsets with parts is a mandatory way of working. And that may seem superfluous for simple cases.</p>
+<p>What if you want to make a simple fact, indicating a user is admitted to some program, according to law? The corresponding rule would have to return <code>true</code> or <code>false</code>, right?</p>
+<pre><code class="language-json">{ "admitted": true}
+</code></pre>
+<p>This is JSON[^jsonnote] way of formatting the data structure of a term with the result.
+But remember that a term is wrapped together with metadata, called <code>info</code> into a <em>fact</em> object.</p>
+<p>[^jsonnote] Remember there is an appendix explaining JSON notation.</p>
+<pre><code class="language-json">{ // a fact
+  "term": {
+    "admitted": true // the thing we actually try to say
+  },
+  "info": { // some meta data
+    "source": "law"
+  }
+}
+</code></pre>
+<p>But then again, we’re trying to make the point that we always want to think in <em>fact sets</em>: a list (<code>[...]</code>) of zero or more facts, under a part name. So, we end up with the following structure as our result:</p>
+<pre><code class="language-json">{
+  // the factset
+  "result": [ // all facts for the part called "result"
+    { // a fact
+      "term": {
+        "admitted": true // the thing we actually try to say
+      },
+      "info": { // some meta data
+        "source": "law"
+      }
+  ]
+}
+</code></pre>
+<p>As you can see here the actual value is wrapped in a term, that is wrapped in a fact, that is contained in a fact set with part name “result”. That is a lot of wrapping, but it is the only data structure you’ll ever have to deal with. No other datastructures, such as lists/arrays, maps/dictionaries, tuples, you name it, are used on the level of the rule engine. And that makes clicking them together, staying in the same “realm of thought”, much easier.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>From here it become a bit formal (read: dry)… Skip to the next chapter if you want.</p>
+</div>
+<h2 id="basic-operations-what-fact-sets-can-do"><a class="header" href="#basic-operations-what-fact-sets-can-do">Basic operations: what fact sets can do</a></h2>
+<p>Without having defined yet how we can create rules on our fact sets yet, we can define some useful functions for fact sets. Those will be the basic functionality we can rely on when building larger chunks of logic.</p>
+<p>Operations on fact sets:</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>[] -&gt; list of …</p>
+</div>
+<div class="table-wrapper"><table><thead><tr><th>function name</th><th>argument</th><th>returns</th><th>description</th></tr></thead><tbody>
+<tr><td><code>fs_create</code></td><td>facts</td><td>factset</td><td>create a new factset from the facts provided (as list, iterator, …)</td></tr>
+<tr><td><code>fs_iterate</code></td><td>-</td><td>list of facts</td><td>retrieve all fact objects contained</td></tr>
+<tr><td><code>fs_count</code></td><td>-</td><td>integer</td><td>retrieve the number of facts contained</td></tr>
+<tr><td><code>fs_filter</code></td><td>predicate</td><td>factset</td><td>retrieve only the facts that pass a given predicate/test</td></tr>
+<tr><td><code>fs_part_names</code></td><td>-</td><td>list of strings</td><td>retrieve all available part names this factset contains</td></tr>
+<tr><td><code>fs_get_part</code></td><td>part name</td><td>factset</td><td>retrieve only the facts from a given part name</td></tr>
+<tr><td><code>fs_set_part</code></td><td>part name</td><td>factset</td><td>all facts now belong to a given part</td></tr>
+<tr><td><code>fs_remove_part</code></td><td>part name</td><td>factset</td><td>a factset containing all parts, but the one provided</td></tr>
+</tbody></table>
+</div>
+<h2 id="implementation-a-specific"><a class="header" href="#implementation-a-specific">Implementation a-specific</a></h2>
+<p>The operations just specified in fact define what a factset <em>is</em>: something that supports “getting a part”, “filtering out facts”, or “determining the number of facts in it” makes up a <em>fact set</em>.</p>
+<p>When we start programming this system, you can go about it in different ways. Should the fact objects be in a list data structure, or in some map/dict? Maybe the facts already exist as rows in a database. Can we leave them there, and create a fact set wrapper that translates the basic operations into SQL? What is there is an online API, can we handle that as a fact set?</p>
+<p>It turns out that we can combine different implementations of a factset, all with their own strengths: this one is fast for small sets, this one is good for giant datasets, and another one can work with on-demand data retrieval… But those nitty-gritty details don’t matter when we want to think about the data in higher level terms. We can use a database in the same way as some simple facts coded directly in the system. Those fact sets can be used interchangeably, without having to know how it works under the hood, but forming a single factset to reason with.</p>
+<h2 id="concatenating-factset"><a class="header" href="#concatenating-factset">Concatenating Factset</a></h2>
+<p>In many occasions, we would want to merge fact sets into a single factset. A factset with children and another with parents can make up a “family” factset for example. One could iterate over the two fact sets individually and create a new one. All the underlying facts are then copied into a new data structure. Since we foresee merging two fact sets will happen often, this may become too resource intensive to make it fast.
+A dedicated fact set implementation can be created, a <em>concatenated factset</em>, that does this in an efficient way. Instead of copying over all facts, it stores two references to the initial (and remember: immutable!) fact sets. When it is asked to determine its count, it will ask the underlying fact sets to give their count and add them up. The same for iteration and filtering facts. This concatenated fact set is said to be a <em>lazy implementation</em>, as it postpones the actual work until the last moment that it is requested.</p>
+<p>So, even though this could be implemented more directly, this special case is partly the success to a fast inference engine. And the good thing is: you can almost forget about it again, since it is just another fact set.</p>
+<h2 id="some-last-notes"><a class="header" href="#some-last-notes">Some last notes</a></h2>
+<p>When designing this data structure, you have to make choices of what <em>is</em> and what <em>is not</em> allowed for a factset. For our system the choice was made for a factset to allow:</p>
+<ul>
+<li><strong>duplicate facts</strong>: you can add, say, a person fact twice.</li>
+<li><strong>heterogeneous sets</strong>: you can add a fact about a person and a fact of a car (different types) to the same fact set (and part).</li>
+</ul>
+<p>It gives the system more expressiveness.</p>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="rules"><a class="header" href="#rules">Rules</a></h1>
+<p>Rules are the tools for deriving new facts from given facts. Those new facts encode the decisions we are interested in.</p>
+<p>This is an example from before:</p>
+<ul>
+<li><strong>Rule</strong>: If the group consists of more than 2 members, all persons younger than 12 years get 50% off.</li>
+</ul>
+<p>Based on the facts: <code>group of people</code> and <code>the price of a ticket</code>, we can derive multiple new facts, such as <code>group size</code>, <code>number of people &lt; 12</code>, <code>number of people &gt;= 12</code>, and eventually <code>total price</code>.</p>
+<p style="text-align:center"><img src="img/discount-rule.svg" alt="Fact set" height="350"></p>
+<h2 id="pure-operations"><a class="header" href="#pure-operations">Pure operations</a></h2>
+<p>In addition to the operator format, we will also make them pure function.</p>
+<p>Pure functions always return the same result for the same inputs, with no side effects.
+This means the evaluation of a rule is deterministic, making the system predictable. Predictability simplifies debugging and reasoning about the behavior of rules.</p>
+<h2 id="immutable-inputs"><a class="header" href="#immutable-inputs">Immutable inputs</a></h2>
+<p>Rules never change fact sets. Fact sets are so-called immutable: you can’t change its content.
+You can create new (immutable) fact sets, though. So instead of adding a fact to a factset, you create
+a new factset from the original facts and the one you want to add.</p>
+<p>This may seem like a simple choice of words, but it guarantees that when you apply a series of operations (an <em>algorithm</em>)
+the original data is still intact. This is also called <em>pure</em> data processing.</p>
+<p>It also handles external data sources, which you may read, but not change in a natural way. You may not be the owner of
+an external database that is used, but you can make selections, add fields etcetera to newly derived facts. Later on in the process, we can refer back to some initial factset, and know it is still the same even though it may have past several operations.</p>
+<p>Sometimes this “pure” approach is also challenging. If we want to rename a collection, or add some additional field, do we also need to copy over all its facts?
+That seems wasteful.
+Luckily by implementing this in a smart way, those operations stay efficient, without giving up the guarantees that purity brings. In the chapter “Implementation Details” this is covered in more detail.</p>
+<h2 id="traceability"><a class="header" href="#traceability">Traceability</a></h2>
+<p>When modelling what a rule should be and how it should behave, we can take that opportunity to bolt on additional functionality. When a rule is triggered, we’ll make sure the resulting facts contain a reference to that rule. When the rule engine finishes at some point, the results contain a “bibliography” of rules that aided in the construction of a fact. That helps to audit, finding out why a certain result came to be, easier.</p>
+<h2 id="metadata-for-rules"><a class="header" href="#metadata-for-rules">Metadata for rules</a></h2>
+<p>Just like facts, rules have metadata too. This information is also a set of arbitrary key-value pairs, for example “source: law 1.2” or “type: fraud detection”. Together with tracing as described before, this allows to know even more about the facts that come out of the inference process.</p>
+<p>Annotating data with meta data is an extra insurance for <em>maintainability</em> and <em>extensibility</em>, i.e. future-proof. It means data and code can be identified later on, and adapted where needed.</p>
+<p>Designing the right metadata is important. What information to take into account? Names, urls, version labels, sources? This is a good moment for a multidisciplinary team to come together: what data is needed to make effective tracing possible? Is there enough information to provide relevant support?</p>
+<h2 id="composability-rules-as-operators"><a class="header" href="#composability-rules-as-operators">Composability: Rules as operators</a></h2>
+<p>A rule is a function that takes an input fact set, and creates a new output fact set. That makes them <em>unary operators</em> in the mathematical sense: functions that take an argument of some type and return something of the same type. Since the input is the same form and shape as the output, this makes clicking them together easy. This makes it easier to build complex rules from smaller, simpler operators without unexpected interactions.</p>
+<p style="text-align:center"><img src="img/compose.svg" alt="Fact set" height="350"></p>
+<blockquote>
+<p>“It is better to have 100 functions operate on one data structure than to have 10 functions operate on 10 data structures.”</p>
+<p>– Alan Perlis’ Epigrams on Programming (1982).</p>
+</blockquote>
+<p>Those 100 functions on your one data structure can be composed together in lots of unique ways, since they all operate on the same data structure, but you can’t really mix the 10 functions on 10 data structures as well, since they were defined only to work on their particular data structure.</p>
+<p>When you have multiple data structures, the knowledge of how these data structures are glued together with each other ends up being in functions, hence, writing functions gets harder because you will have to repeat that knowledge again and again.</p>
+<p>Whereas if you have just one data structure, this knowledge lies inside that data structure itself, hence, freeing functions of this knowledge.</p>
+<h3 id="breaking-down-rules"><a class="header" href="#breaking-down-rules">Breaking down rules</a></h3>
+<p>We can create a rule that does many things at the same time. For example a function with the parameters <code>color = yellow</code>, <code>shape != round</code>, determines the total price for each banana in a (fact)set of available fruits.</p>
+<p>But we may already have trouble with one of our design goals: <em>traceability</em>. If a fruit is not yellow or round enough for a banana, it is harder to automatically track which of those demands was not met. The same holds for the total price of those fruits: does it make sense for the number of items that met the criteria?</p>
+<p>This is why we promote breaking down rules in reusable, simpler rules. Those can we individually checked for correctness and allows for running an audit log on those components.</p>
+<h2 id="supporting-our-goals"><a class="header" href="#supporting-our-goals">Supporting our goals</a></h2>
+<p>Making rules pure mathematical operators, with tracing capability helps to achieve some of our set design goals.</p>
+<ul>
+<li><strong>Correctness</strong>: Pure functions make them deterministic and predictable. It also simplifies testing; you only need to test the function in isolation. Mathematical purity aligns with formal logic and algebraic laws (e.g., associativity, commutativity, distributivity where applicable). This enables formal reasoning, correctness proofs, and possibly static analysis of rules.</li>
+<li><strong>Scalability</strong>: When operators are pure, you can replace an expression with its value without changing system behavior (known as <em>referential transparency</em>). This property is crucial for optimization, caching, and memoization. Since pure operators have no side effects, their evaluations can be run in parallel without risk of race conditions. This can greatly improve performance in large rule sets.</li>
+<li><strong>Maintainable</strong>: Composability leads to cleaner, more modular rule systems. Pure functions are self-contained; they don’t depend on external state or mutate anything.</li>
+</ul>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>look back at design goals for examples.</p>
+</div>
+<h2 id="rules-can-be"><a class="header" href="#rules-can-be">Rules <em>can</em> be…</a></h2>
+<p>Rules are strict in the sense that the input and output is always a factset. But they are still very versatile, as the following examples show.</p>
+<ul>
+<li>Reorganize facts in parts</li>
+<li>Return the input as part of the output fact set, so data is added, not replaced.</li>
+<li>Ignore any input and just return some new fact set.</li>
+<li>Generate facts that indicate some action (e.g. send e-mail, or generate warning)</li>
+<li>Use metadata. Remember that facts contain the main data (<em>term</em>) but also the metadata (<em>info</em>). Both parts are available when creating a rule. That means metadata can be part of the logic to create a result, making rules expressive. E.g. a rule that filters people based on age (in <em>term</em>) and on source (in <em>info</em>).</li>
+<li>They can take parameters to do their job. Parameters are not part of the normal input argument (a factset), but rather means to specify a rule further. Take a filter rule for example. It could filter facts on a certain field, say “age &gt; 18”. This is then a parameter that is set up once, and can then be applied any number of times to different inputs.</li>
+<li>Rules can use parameters to retrieve data from external sources. When such a rule gets a customer id, it can retrieve relevant data by a REST API, and format the resulting data as a factset.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="scripting"><a class="header" href="#scripting">Scripting</a></h1>
+<p>We now have rules and fact sets (that rules always operate on) defined. Next, we’ll define some basic rules, that are simple in itself, but prove to be a useful toolbox to create higher level rules.</p>
+<p>Those higher level rules are closer to the domain we want to model, and are therefore more interesting ultimately.</p>
+<p>We’ll work up rules to become a programming language in itself. Not one that let’s you create games, but one dedicated to create logical systems.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>This chapter is about making basic things available for creating rules in a sensible way. This may be boring if you don’t feel too puristic about this endeavor. If you already believe that simple things such as “selecting facts based on some property”, or “counting them” and assigning them to some variable will be possible with <em>factsets</em> and the outlines for <em>rules</em>, you can make an evasive maneuver here, and skip boring/founding definitions. After all: <code>n =  getpart("persons"); filter(age &gt; 18); count</code> clearly means the number of persons older than 18, stored in a factset named “n”, right?</p>
+</div>
+<h2 id="basic-rules"><a class="header" href="#basic-rules">Basic rules</a></h2>
+<p>Remember that we defined fact sets to have certain functionality baked in. Independent of whatever rules we are going to create, fact sets can do certain things themselves.</p>
+<div class="table-wrapper"><table><thead><tr><th>function name</th><th>argument</th><th>returns</th><th>description</th></tr></thead><tbody>
+<tr><td><code>fs_create</code></td><td>facts</td><td>factset</td><td>create a new factset from the facts provided (as list, iterator, …)</td></tr>
+<tr><td><code>fs_iterate</code></td><td>-</td><td>list of facts</td><td>retrieve all fact objects contained</td></tr>
+<tr><td><code>fs_count</code></td><td>-</td><td>integer</td><td>retrieve the number of facts contained</td></tr>
+<tr><td><code>fs_filter</code></td><td>predicate</td><td>factset</td><td>retrieve only the facts that pass a given predicate/test</td></tr>
+<tr><td><code>fs_part_names</code></td><td>-</td><td>list of string</td><td>retrieve all available part names this factset contains</td></tr>
+<tr><td><code>fs_get_part</code></td><td>part name</td><td>factset</td><td>retrieve only the facts from a given part name</td></tr>
+<tr><td><code>fs_set_part</code></td><td>part name</td><td>factset</td><td>all facts now belong to a given part</td></tr>
+<tr><td><code>fs_remove_part</code></td><td>part name</td><td>factset</td><td>a factset containing all parts, but the one provided</td></tr>
+</tbody></table>
+</div>
+<p>But those functions are not what a user of our rule engine will (often) use directly, though. Rules, as discussed before, are what a user applies to define some logic.</p>
+<p>Some of those fact set functions are wrapped in rules, so they are accessible and can be reused easily.</p>
+<div class="table-wrapper"><table><thead><tr><th>rule name</th><th>argument</th><th>parameter</th><th>returns</th><th>description</th></tr></thead><tbody>
+<tr><td><code>count</code></td><td>factset</td><td>-</td><td>factset</td><td>fact set with single fact, with term <em>n = …</em></td></tr>
+<tr><td><code>filter</code></td><td>factset</td><td>predicate</td><td>factset</td><td>a subset of facts that obey the predicate</td></tr>
+<tr><td><code>get_part</code></td><td>factset</td><td>part name</td><td>factset</td><td>a factset with just the given part</td></tr>
+<tr><td><code>set_part</code></td><td>factset</td><td>part name</td><td>factset</td><td>a factset with all facts from all parts under a new name</td></tr>
+<tr><td><code>remove_part</code></td><td>factset</td><td>part name</td><td>factset</td><td>a factset containing all parts, but the one provided</td></tr>
+</tbody></table>
+</div>
+<p>Note that:</p>
+<ul>
+<li>the rule name is not prefixed with <code>fs_</code> (to denote the fact set variant).</li>
+<li>those rules internally use the fact set functions</li>
+<li>the argument is always a factset</li>
+<li>the result is always a factset</li>
+<li>a fixed parameter can be used (the predicate function, or part name) to instantiate the rule.</li>
+</ul>
+<h3 id="count-rule"><a class="header" href="#count-rule">Count rule</a></h3>
+<p>Determine the number of facts in the provided factset (independent of what part they belong to).</p>
+<p style="text-align:center"><img src="img/getpart-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="filter-rule"><a class="header" href="#filter-rule">Filter rule</a></h3>
+<p>Select just the facts that hold up to some test. This test (i.e. a predicate) looks at a certain field in the term of a fact (e.g. “age”) and compares that to constant.</p>
+<p style="text-align:center"><img src="img/filter-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="get-part-rule"><a class="header" href="#get-part-rule">Get part rule</a></h3>
+<p>Separate out all facts under a certain label, i.e. the part name.</p>
+<p style="text-align:center"><img src="img/getpart-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="remove-part-rule"><a class="header" href="#remove-part-rule">Remove part rule</a></h3>
+<p>Separate out all facts that are <em>not</em> under a certain label, i.e. the part name.</p>
+<p style="text-align:center"><img src="img/removepart-rule.svg" alt="Fact set" height="350"></p>
+<h3 id="set-part-rule"><a class="header" href="#set-part-rule">Set part rule</a></h3>
+<p>Assign a new part name to all the facts in the factset.</p>
+<p style="text-align:center"><img src="img/setpart-rule.svg" alt="Fact set" height="350"></p>
+<h2 id="first-examples-with-rules"><a class="header" href="#first-examples-with-rules">First examples with rules</a></h2>
+<p>At this point we can already create some meaningful rules, given the basic ones we just introduced.</p>
+<p>Consider the following factset that contains a part <code>persons</code>: \(FS_{persons}\). We just show the terms as rows (not the metadata of the fact).</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th></tr></thead><tbody>
+<tr><td>Homer</td><td>short</td><td style="text-align: right">250</td><td style="text-align: right">36</td><td>male</td></tr>
+<tr><td>Marge</td><td>long</td><td style="text-align: right">150</td><td style="text-align: right">35</td><td>female</td></tr>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td></tr>
+<tr><td>Abe</td><td>short</td><td style="text-align: right">170</td><td style="text-align: right">70</td><td>male</td></tr>
+<tr><td>Selma</td><td>long</td><td style="text-align: right">160</td><td style="text-align: right">41</td><td>female</td></tr>
+<tr><td>Otto</td><td>long</td><td style="text-align: right">180</td><td style="text-align: right">38</td><td>male</td></tr>
+<tr><td>Krusty</td><td>middle</td><td style="text-align: right">200</td><td style="text-align: right">45</td><td>male</td></tr>
+</tbody></table>
+</div>
+<p>This determines the number of people:</p>
+<p>\[ \texttt{count}(FS_{persons}) \]</p>
+<p>Resulting in:</p>
+<div class="table-wrapper"><table><thead><tr><th>n</th></tr></thead><tbody>
+<tr><td>9</td></tr>
+</tbody></table>
+</div>
+<p>This selects the children:</p>
+<p>\[ \texttt{filter}_{age \leq 12 }(FS_{persons}) \]</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th></tr></thead><tbody>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td></tr>
+</tbody></table>
+</div>
+<p>And this the number of children, specifically taken from a part:</p>
+<p>\[ \texttt{count} (\texttt{filter}_{age \leq 12 }(\texttt{getpart}_{persons}(FS_{persons}))) \]</p>
+<div class="table-wrapper"><table><thead><tr><th>n</th></tr></thead><tbody>
+<tr><td>3</td></tr>
+</tbody></table>
+</div>
+<h2 id="compose-using-then"><a class="header" href="#compose-using-then">Compose using <em>Then</em></a></h2>
+<p>The last example shows we have to \( nest(every(functioncall(FS)))) \). Function composition is more convenient to click together two rules, and make it a new rule object (instead of the resulting value).</p>
+<p>\[ \texttt{count} \circ \texttt{filter}_{age \leq 12} \]</p>
+<p style="text-align:center"><img src="img/then-1-rule.svg" alt="Fact set" height="350"></p>
+<p>Here, \( \circ \), is the usual mathematical way to denote function (rule) composition. It performs the right-most function first, then the one on the left, etc.</p>
+<p>In programming, we would often like to think in data flows. First do this, then that, followed by that, etc. It is the same as function composition, but then works in the opposite direction. We will use the symbol <code>then</code>.</p>
+<p>\[   \texttt{filter}_{age \leq 12} ~ \texttt{then} ~ \texttt{count}  \]</p>
+<p style="text-align:center"><img src="img/then-2-rule.svg" alt="Fact set" height="350"></p>
+<p>Saying: filter them out by age, <em>then</em> count.</p>
+<p>So far we have seen rules that do something on data (factsets). But can create <code>then</code> as a rule in itself.</p>
+<p>\[ \texttt{then}_{rule_a, rule_b} =  rule_a ~ \texttt{then} ~ rule_b \]</p>
+<p><code>then</code> has two parameters that are rules themselves (e.g. <code>getpart</code> and <code>count</code>). When the <code>then</code> rule is applied, it evaluates the first rule \( rule_a \), and applies the second parameter, \( rule_b \) on that.</p>
+<p>And since we will use <code>then</code> a lot, it is better to keep it short. The semicolon, <code>;</code>,  means <code>then</code> as well.
+\[   \texttt{filter}_{age \leq 12} ~ \texttt{;} ~ \texttt{count}  \]</p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>It may not sink in directly, but is elegant to learn that <em>composition of rules is a rule itself</em>.</p>
+</div>
+<h2 id="assigning-variablespart-names"><a class="header" href="#assigning-variablespart-names">Assigning variables/part names</a></h2>
+<p>At this point we have rules, that can be chained together into a single bigger rule. To improve readability (and therefore correctness and maintainability), we would want to give those rules meaningful names. For example:</p>
+<p>\[  \texttt{children} = \texttt{getpart}_{persons} ~ \texttt{then} ~ \texttt{filter}_{age \leq 12} ~ \texttt{then} ~ \texttt{count}  \]</p>
+<p>It turns out we can implement this assignment as a rule itself. When applied to a factset, \( FS \):</p>
+<ul>
+<li>It removes the part with the variable name (the left-hand-side). Maybe there was no such part, in which case it is unchanged. This reduced factset is now called \( FS’ \).</li>
+<li>It evaluates the right-hand-side, which is a (possibly composed) rule, that create a new factset.</li>
+<li>That factset will get the variable name as part name, \(FS_{var}\).</li>
+<li>The result is \( FS’ \) concatenated with \(FS_{var}\)<sup class="footnote-reference" id="fr-note-1"><a href="#footnote-note">1</a></sup>.</li>
+</ul>
+<p>As you can see here, it is build up from basic rules we already know.</p>
+<p style="text-align:center"><img src="img/assign-rule.svg" alt="Fact set" height="350"></p>
+<p>And this is a more compact way to visualize the <code>assign</code> rule:</p>
+<p style="text-align:center"><img src="img/assign-2-rule.svg" alt="Fact set" height="350"></p>
+<div class="mdbook-alerts mdbook-alerts-note">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  note
+</p>
+<p>The same as for <code>then</code> rules… funny that you can create new variables entirely from the definition of rules and factsets, right? At least from a programming laguage perspective, that is.</p>
+</div>
+<h2 id="celebrating-axiomatic-thinking"><a class="header" href="#celebrating-axiomatic-thinking">Celebrating axiomatic thinking</a></h2>
+<p>When we first discussed <em>facts</em>, <em>factsets</em> and <em>rules</em>, it probably seemed a bit boring. But here we are: we have built a logical programming language,from those ingredients and nothing more.</p>
+<p>The fact that we can just keep transforming factsets with rules, and get additional high level features like assigning intermediate variables and chaining rules to keep things organized <em>almost for free</em>, is great.</p>
+<h2 id="extending-the-toolbox"><a class="header" href="#extending-the-toolbox">Extending the toolbox</a></h2>
+<p>We have some first rules to recombine parts: <code>getpart</code>, <code>removepart</code>, <code>concatenate</code>, that allow us to recombine fact sets by things from here and add them there, all with a single factset argument and result. There are many useful transformations thinkable, that may come in handy when defining higher level rules.</p>
+<h3 id="aggregations"><a class="header" href="#aggregations">Aggregations</a></h3>
+<p>An aggregate rule is a function where multiple values are processed together to form a single summary statistic.</p>
+<p>Parameters:</p>
+<ul>
+<li>field to group by (e.g. “gender”)</li>
+<li>field for the value to use (e.g. “age”)</li>
+<li>function to reduce the selected value into a single one</li>
+</ul>
+<p><strong>Example</strong>:
+\[ \texttt{aggregate}_{gender, age, max}  \]</p>
+<div class="table-wrapper"><table><thead><tr><th>gender</th><th style="text-align: right">aggregate_max_age</th></tr></thead><tbody>
+<tr><td>male</td><td style="text-align: right">70</td></tr>
+<tr><td>female</td><td style="text-align: right">41</td></tr>
+</tbody></table>
+</div>
+<h3 id="arithmetic"><a class="header" href="#arithmetic">Arithmetic</a></h3>
+<p>Apply an arithmetic of two fields of two factset selections.</p>
+<p>Parameters:</p>
+<ul>
+<li>the function to apply (e.g. +, -, *, /)</li>
+<li>the rule that selects the first argument (the first field of the first fact’s term is used)</li>
+<li>the rule that selects the second argument (the first field of the first fact’s term is used)</li>
+</ul>
+<p><strong>Example</strong>:</p>
+<p>This factset contains two parts:</p>
+<ul>
+<li>revenue</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>r</th><th>project</th></tr></thead><tbody>
+<tr><td>5</td><td>A</td></tr>
+<tr><td>4</td><td>B</td></tr>
+<tr><td>3</td><td>C</td></tr>
+</tbody></table>
+</div>
+<ul>
+<li>expense</li>
+</ul>
+<div class="table-wrapper"><table><thead><tr><th>e</th></tr></thead><tbody>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody></table>
+</div>
+<p>Then</p>
+<p>\[ \texttt{arithmetic}_{-, \texttt{getpart}(“revenue”), \texttt{getpart}(“expense”)}  \]</p>
+<p>yields:</p>
+<div class="table-wrapper"><table><thead><tr><th>x</th></tr></thead><tbody>
+<tr><td>4.0</td></tr>
+<tr><td>2.0</td></tr>
+</tbody></table>
+</div>
+<h3 id="const"><a class="header" href="#const">Const</a></h3>
+<p>Some constant value.
+Always evaluates to the given factset, ignoring its factset input argument. This is a way to convert a factset into a rule.</p>
+<p><strong>Example</strong>:</p>
+<p>If we have a factset with an “expense” part:</p>
+<div class="table-wrapper"><table><thead><tr><th>e</th></tr></thead><tbody>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody></table>
+</div>
+<p>and want to use <code>arithmetic</code> to add 1, this number is first wrapped in a term (<code>{x: 1}</code>), then in a fact, then into a factset with this fact, and then to a rule that is expected as parameter.</p>
+<p>\[ \texttt{arithmetic}_{-, \texttt{getpart}(“revenue”), \texttt{const}(1)}  \]</p>
+<p>yields:</p>
+<div class="table-wrapper"><table><thead><tr><th>x</th></tr></thead><tbody>
+<tr><td>2</td></tr>
+<tr><td>3</td></tr>
+</tbody></table>
+</div>
+<h3 id="identity"><a class="header" href="#identity">Identity</a></h3>
+<p>A rule that does nothing to its input argument and just returns it. This sounds unnecessary, but some other rules may require a rule that creates a selection of some sort. If you want to just want to use all provided facts, <code>identity</code> can be used to achieve that.</p>
+<p>If we have a factset with an “expense” part:</p>
+<div class="table-wrapper"><table><thead><tr><th>e</th></tr></thead><tbody>
+<tr><td>1</td></tr>
+<tr><td>2</td></tr>
+</tbody></table>
+</div>
+<p>and want to use <code>arithmetic</code> to add 1, instead of writing
+\[ \texttt{arithmetic}_{-, \texttt{getpart}(“revenue”), \texttt{const}(1)}  \]
+One can as well write:
+\[ \texttt{arithmetic}_{-, \texttt{identity}, \texttt{const}(1)}  \]</p>
+<p>to yield:</p>
+<div class="table-wrapper"><table><thead><tr><th>x</th></tr></thead><tbody>
+<tr><td>2</td></tr>
+<tr><td>3</td></tr>
+</tbody></table>
+</div>
+<h3 id="join"><a class="header" href="#join">Join</a></h3>
+<p>Join two selections on the given field. It merges two facts into one.</p>
+<p>Given this factset that defines titles by gender, \(FS_{titles}\),</p>
+<div class="table-wrapper"><table><thead><tr><th>gender</th><th style="text-align: left">title</th></tr></thead><tbody>
+<tr><td>male</td><td style="text-align: left">Mr.</td></tr>
+<tr><td>female</td><td style="text-align: left">Ms.</td></tr>
+</tbody></table>
+</div>
+<p>we can augment \(FS_{persons}\) with this extra infomation using:</p>
+<p>\[ \texttt{join}_{gender}(FS_{persons}, FS_{titles})  \]</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th><th>title</th></tr></thead><tbody>
+<tr><td>Homer</td><td>short</td><td style="text-align: right">250</td><td style="text-align: right">36</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Marge</td><td>long</td><td style="text-align: right">150</td><td style="text-align: right">35</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Abe</td><td>short</td><td style="text-align: right">170</td><td style="text-align: right">70</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Selma</td><td>long</td><td style="text-align: right">160</td><td style="text-align: right">41</td><td>female</td><td>Ms.</td></tr>
+<tr><td>Otto</td><td>long</td><td style="text-align: right">180</td><td style="text-align: right">38</td><td>male</td><td>Mr.</td></tr>
+<tr><td>Krusty</td><td>middle</td><td style="text-align: right">200</td><td style="text-align: right">45</td><td>male</td><td>Mr.</td></tr>
+</tbody></table>
+</div>
+<h3 id="select-fields"><a class="header" href="#select-fields">Select fields</a></h3>
+<p>Just pick certain fields (columns) from each fact’s terms.</p>
+<p>\[ \texttt{select}_{age, hair}(FS_{persons})  \]</p>
+<p>yields:</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: right">age</th><th>hair</th></tr></thead><tbody>
+<tr><td style="text-align: right">36</td><td>short</td></tr>
+<tr><td style="text-align: right">35</td><td>long</td></tr>
+<tr><td style="text-align: right">10</td><td>short</td></tr>
+<tr><td style="text-align: right">8</td><td>middle</td></tr>
+<tr><td style="text-align: right">1</td><td>middle</td></tr>
+<tr><td style="text-align: right">70</td><td>short</td></tr>
+<tr><td style="text-align: right">41</td><td>long</td></tr>
+<tr><td style="text-align: right">38</td><td>long</td></tr>
+<tr><td style="text-align: right">45</td><td>middle</td></tr>
+</tbody></table>
+</div>
+<h2 id="return-if"><a class="header" href="#return-if">Return if</a></h2>
+<p><em>Return if</em> helps handle different cases to determine a returned value.</p>
+<p>Say we are in front of a traffic light, then <em>green</em> means ‘go’ and <em>red</em> means “stop”, or “don’t go”.</p>
+<p>In our rule engine, we can say there is a traffic light factset:</p>
+<div class="table-wrapper"><table><thead><tr><th>light</th></tr></thead><tbody>
+<tr><td>“red”</td></tr>
+</tbody></table>
+</div>
+<p>or</p>
+<div class="table-wrapper"><table><thead><tr><th>light</th></tr></thead><tbody>
+<tr><td>“green”</td></tr>
+</tbody></table>
+</div>
+<p>and we want to derive a new fact set:</p>
+<div class="table-wrapper"><table><thead><tr><th>go</th></tr></thead><tbody>
+<tr><td>false</td></tr>
+</tbody></table>
+</div>
+<p>or</p>
+<div class="table-wrapper"><table><thead><tr><th>go</th></tr></thead><tbody>
+<tr><td>true</td></tr>
+</tbody></table>
+</div>
+<p>In most programming languages you can do something like this:</p>
+<pre><code class="language-js">if (light == "green") {
+    return {"go": True}
+}
+
+return {"go": False}
+</code></pre>
+<p>So, <em>if</em> some condition holds, <em>return</em> the corresponding value, <em>else</em> just continue with the next lines. In this case that turns out to be returning another value. <em>Returning</em> is as much delivering the “final value”.</p>
+<p>Writing</p>
+<pre><code class="language-js">if *condition* {
+    return expression
+}
+</code></pre>
+<p>in similar function as before, we get:</p>
+<p>\[ \texttt{return_if}(condition, rule)  \]</p>
+<p>Here</p>
+<ul>
+<li><em>condition</em> is a predicate; a test that takes a factset as an argument and returns <code>true</code> or <code>false</code>. It is a little expression that says: this property must equal this or that. Or: this must be greater than some value. In our example of persons: <code>age &gt; 18</code>, or so.</li>
+<li><em>expression</em> is some value you want to use later. In this case a <em>go</em> or <em>no go</em> value. As a factset of course, since this is the way we do things.</li>
+</ul>
+<p>A rule is often composed: do something <em>then</em> something else <em>then</em> more…
+With a “return_if” somewhere in this chain, we can decide to stop halfway, if the conditions are right. It lets you define shortcuts in you logic flow.</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-note">
+<p>In the chapter about factsets we briefly mentioned the efficient concatenated factset, used here. <a href="#fr-note-1">↩</a></p>
+</li>
+</ol><div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="use-cases-and-examples"><a class="header" href="#use-cases-and-examples">Use cases and examples</a></h1>
+<p>We’ll look at the earlier examples of business rules to determine discount on tickets and implement them with the tools we have under our belt.</p>
+<p>The following factset with part <code>persons</code>: \(FS_{persons}\) is used again.</p>
+<div class="table-wrapper"><table><thead><tr><th>name</th><th>hair</th><th style="text-align: right">weight</th><th style="text-align: right">age</th><th>gender</th><th>member</th></tr></thead><tbody>
+<tr><td>Homer</td><td>short</td><td style="text-align: right">250</td><td style="text-align: right">36</td><td>male</td><td>false</td></tr>
+<tr><td>Marge</td><td>long</td><td style="text-align: right">150</td><td style="text-align: right">35</td><td>female</td><td>false</td></tr>
+<tr><td>Bart</td><td>short</td><td style="text-align: right">90</td><td style="text-align: right">10</td><td>male</td><td>false</td></tr>
+<tr><td>Lisa</td><td>middle</td><td style="text-align: right">78</td><td style="text-align: right">8</td><td>female</td><td>false</td></tr>
+<tr><td>Maggie</td><td>middle</td><td style="text-align: right">20</td><td style="text-align: right">1</td><td>female</td><td>false</td></tr>
+<tr><td>Abe</td><td>short</td><td style="text-align: right">170</td><td style="text-align: right">70</td><td>male</td><td>false</td></tr>
+<tr><td>Selma</td><td>long</td><td style="text-align: right">160</td><td style="text-align: right">41</td><td>female</td><td>true</td></tr>
+<tr><td>Otto</td><td>long</td><td style="text-align: right">180</td><td style="text-align: right">38</td><td>male</td><td>false</td></tr>
+<tr><td>Krusty</td><td>middle</td><td style="text-align: right">200</td><td style="text-align: right">45</td><td>male</td><td>true</td></tr>
+</tbody></table>
+</div><div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>TODO</p>
+</div>
+<h3 id="example-personal-discount-ticket-1"><a class="header" href="#example-personal-discount-ticket-1">Example: Personal Discount Ticket</a></h3>
+<ul>
+<li><strong>Rule</strong>: If a person is a member and the total is over $100, give 10% off.</li>
+</ul>
+<p>The engine checks if both conditions are true, and if so, applies the discount.</p>
+<pre><code>members = getpart("persons") ; filter (member == true)
+discount = returnif( getpart("members"), const({factor: 0.15})) ; const({factor: 0.0})
+  
+</code></pre>
+<h3 id="example-family-discount-ticket-1"><a class="header" href="#example-family-discount-ticket-1">Example: Family Discount Ticket</a></h3>
+<ul>
+<li><strong>Rule</strong>: If the group consists of more than 2 members, all persons younger than 12 years get 50% off.</li>
+</ul>
+<p>The engine checks the group of people, finds the kids if there are any, and and if so, applies the discount.</p>
+<h3 id="example-combined-discount-1"><a class="header" href="#example-combined-discount-1">Example: Combined Discount</a></h3>
+<ul>
+<li><strong>Rule</strong>: If there is Family Discount use that, otherwise consider the personal discount. If both don’t hold, give 5% discount on week days.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="implementation"><a class="header" href="#implementation">Implementation</a></h1>
+<p>Now we have a design, a model for capturing logic with factsets and rules, it can be implemented using any programming language. Up until this point, we did not bother with any code, and we will keep it that way. Still we can make some suggestions for any implementation.</p>
+<h2 id="general-datastructures-vs-classes"><a class="header" href="#general-datastructures-vs-classes">General datastructures vs Classes</a></h2>
+<p>The things that contain our data (terms, wrapped in facts) can be implemented in different ways. One way is to use generic data structures like (hash)maps/dictionaries found in all programming languages. This data structure does not make assumptions about its content and that makes them very versatile. But you may prefer strict objects for your data. A <code>person</code> can not have a property <code>screen_brightness</code> (for humans are no computer screens, after all). Many languages have “classes” in one way or more. This strictness helps preventing certain mistakes.</p>
+<p>In our reference implementation, <em>terms</em> can be implemented with both of those strategies. Both can be beneficial in the right context. A term <em>interface</em> guards that those implementations can be treated the same. For example, they can both enumerate their field names, and equality checks happen in an order independent way.</p>
+<h2 id="factsets"><a class="header" href="#factsets">Factsets</a></h2>
+<p>Factsets are things that support a certain set of function (count, iterate facts, filter, etc). Multiple implementations exist, covered by an interface, to allow efficient processing of data.</p>
+<p>The most general factset implementation is a class that embeds a hashmap to do its bookkeeping. Keys of this map are the part names and the values are lists of facts. In a way you don’t need more.</p>
+<p>A special implementation allow just for a single part, and just stores the facts in a list. Internally this is used a lot, and some operations become cheaper to perform.</p>
+<p>An even more reduced implementation is the <em>empty</em> factset. As you can guess, no facts are contained at all. This is a very common value, to denote “no result”, and is worth optimizing for.</p>
+<p>A <em>concatenated factset</em> was already mentioned before. Being able to combine factsets in constant time, \(\mathcal{O}(1)\) as computer scientist would say, simply means instantaneous results, independent of the number of facts contained.</p>
+<p>Another special mention is the <em>SQL factset</em>. Instead of storing facts in memory, it translates operations into SQL, so a connected database can be queried. A <code>count</code> becomes <code>SELECT COUNT(*) AS n FROM TABLE 'partname';</code> under the hood. Filtering requires translation of the predicate objects to proper <code>WHERE</code> expressions. When special operations can’t be translated into SQL, all data will have to be copied into an in-memory, general, factset.</p>
+<p>Remember factset are immutable. In case of a database backed fact set, that is very evident, as one is often not allowed to change data, but only to read from it.</p>
+<p>Also, a combined (concatenated) factset can be made up from different implementations (a database, REST API, in memory data), without a user having to care about this.</p>
+<h2 id="rules-1"><a class="header" href="#rules-1">Rules</a></h2>
+<p>Rules are pure functions leaving the input intact. That means, if the slightest tweak to the data is to be performed, the data will need to be copied (or referenced) into a new factset object. The “setpart” operation, assigning a new name to a factset is used often. It is a building block used every time you use an assignment. But changing the name modifies the factset, right? Cheap copies of factset, just overwriting the name, is an optimization that pays off quickly and was implemented for that reason.</p>
+<p>Since the interface <code>factset -&gt; factset</code> for a rule is so uniform, we can benefit from making high level tools to validate and represent rules in different ways in a general way. Apart from a rule’s <code>apply()</code> function, there is an <code>ast()</code> function that generates an Abstract Syntax Tree (AST) of the rule, so its components can be visited in a uniform way.</p>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="advanced-features-and-extensions"><a class="header" href="#advanced-features-and-extensions">Advanced Features and Extensions</a></h1>
+<p>Scripts, subscripts, scopes. ReturnIf.</p>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="future"><a class="header" href="#future">Future</a></h1>
+<ul>
+<li>Standardized script formats</li>
+<li>Parser for script formats (JSON, YAML, custom)</li>
+<li>OpenTelemetry hooks for tracing</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="terminology"><a class="header" href="#terminology">Terminology</a></h1>
+<ul>
+<li>
+<p><strong>API (REST API)</strong>: An API (Application Programming Interface) is a defined way for software systems to exchange data. A REST API is a common style of API that uses standard web methods (like GET, POST, PUT, DELETE) to let one program request or update information from another over the internet.</p>
+</li>
+<li>
+<p><strong>Business logic</strong>: Business logic is the part of software that defines how decisions are made and actions are carried out based on the goals and rules of an organization. It represents the “real-world rules” of the business, such as how discounts are calculated, how eligibility is determined, or how approvals are handled.</p>
+</li>
+<li>
+<p><strong>Inference</strong>: Inference is the process of reaching a conclusion from available information. In computing, it often refers to applying existing knowledge or models to new data in order to produce results, such as predicting an outcome or categorizing input.</p>
+</li>
+<li>
+<p><strong>Message queue</strong>: A message queue is a system for reliably passing messages between different parts of software. Messages are stored until the receiving program is ready to process them, which helps keep systems decoupled and allows them to work at different speeds without losing data.</p>
+</li>
+<li>
+<p><strong>Rule engine</strong>: A rule engine is software that evaluates information against a set of predefined rules. It allows decisions or actions to be automated by consistently applying “if condition, then result” logic, without needing to write custom code for each situation.</p>
+</li>
+<li>
+<p><strong>(SQL) database</strong>: A SQL database is a system for storing, organizing, and retrieving structured information. Data is arranged in tables with rows and columns, and SQL (Structured Query Language) is used to query, update, and manage the stored information.</p>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="appendix-what-is-json"><a class="header" href="#appendix-what-is-json">Appendix: What is JSON?</a></h1>
+<p>JSON (JavaScript Object Notation) is a way to store and share data in a text format that is easy for humans to read and easy for computers to understand. It looks like a list of key-value pairs (like labels and their information).
+How to Read It</p>
+<ul>
+<li>
+<p><strong>Curly Braces</strong> <code>{ }</code></p>
+<p>These wrap an object (a group of related information).</p>
+</li>
+<li>
+<p><strong>Square Brackets</strong> <code>[ ]</code></p>
+<p>These wrap a list of items (like a collection of similar things).</p>
+</li>
+<li>
+<p><strong>Keys and Values</strong></p>
+<p>Each piece of data is a pair:</p>
+<p>“key”: “value”</p>
+<p>Key = label (always in quotes)</p>
+<p>Value = actual information (can be text, number, true/false, another object, or a list)</p>
+</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-json">{
+    "name": "Alice",
+    "age": 30,
+    "hobbies": ["reading", "cycling"],
+    "address": {
+        "city": "Paris",
+        "country": "France"
+    }
+}
+</code></pre>
+<p>Reading this out loud:</p>
+<ul>
+<li>name → “Alice”</li>
+<li>age → 30</li>
+<li>hobbies → a list of 2 things: “reading”, “cycling”</li>
+<li>address → another object with city and country</li>
+</ul>
+<div class="mdbook-alerts mdbook-alerts-tip">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  tip
+</p>
+<p>Think of JSON like a nested list of labels and details.</p>
+<ul>
+<li>Objects = groups of info → <code>{ }</code></li>
+<li>Lists = multiple items → <code>[ ]</code></li>
+</ul>
+</div>
+<p>Even though comments are officially not a part of JSON, it is a common way to insert remarks for human readers: <code>// comments start with a double slash and is followed by any text until the end of the line</code>. The text is completely ignored though and has no influence on the values.</p>
+<p>So this:</p>
+<pre><code class="language-json">{
+  "name": "Alice"
+}
+</code></pre>
+<p>is equivalent to this:</p>
+<pre><code class="language-json">{ // start of the object
+  "name": "Alice" // this person's initial becomes "A"
+}
+</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </div>
+    </body>
+</html>

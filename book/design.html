@@ -1,0 +1,371 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Design Principles - MaxRegel - Building a Rule Engine from the Ground Up</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">MaxRegel - Building a Rule Engine from the Ground Up</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <style>
+.mdbook-alerts {
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-left: 0.25em solid var(--mdbook-alerts-color);
+}
+
+.mdbook-alerts > *:first-child {
+  margin-top: 0;
+}
+
+.mdbook-alerts > *:last-child {
+  margin-bottom: 0;
+}
+
+.mdbook-alerts-title {
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  line-height: 1;
+  color: var(--mdbook-alerts-color);
+  text-transform: capitalize;
+}
+
+.mdbook-alerts-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.2em;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / 100%;
+  mask: no-repeat center / 100%;
+  -webkit-mask-image: var(--mdbook-alerts-icon);
+  mask-image: var(--mdbook-alerts-icon);
+}
+
+.mdbook-alerts-note {
+  --mdbook-alerts-color: rgb(9, 105, 218);
+  /* https://icon-sets.iconify.design/material-symbols/info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16v-4q0-.425-.288-.712T12 11q-.425 0-.712.288T11 12v4q0 .425.288.713T12 17m0-8q.425 0 .713-.288T13 8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8q0 .425.288.713T12 9m0 13q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12q0-3.35-2.325-5.675T12 4Q8.65 4 6.325 6.325T4 12q0 3.35 2.325 5.675T12 20m0-8"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-tip {
+  --mdbook-alerts-color: rgb(26, 127, 55);
+  /* https://icon-sets.iconify.design/material-symbols/lightbulb-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 22q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-3-3q-.425 0-.712-.288T8 18q0-.425.288-.712T9 17h6q.425 0 .713.288T16 18q0 .425-.288.713T15 19zm-.75-3q-1.725-1.025-2.738-2.75T4.5 9.5q0-3.125 2.188-5.312T12 2q3.125 0 5.313 2.188T19.5 9.5q0 2.025-1.012 3.75T15.75 16zm.6-2h6.3q1.125-.8 1.738-1.975T17.5 9.5q0-2.3-1.6-3.9T12 4Q9.7 4 8.1 5.6T6.5 9.5q0 1.35.613 2.525T8.85 14M12 14"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-important {
+  --mdbook-alerts-color: rgb(130, 80, 223);
+  /* https://icon-sets.iconify.design/material-symbols/chat-info-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 7q.425 0 .713-.288T13 6q0-.425-.288-.712T12 5q-.425 0-.712.288T11 6q0 .425.288.713T12 7m0 8q.425 0 .713-.288T13 14v-4q0-.425-.288-.712T12 9q-.425 0-.712.288T11 10v4q0 .425.288.713T12 15m-6 3l-2.3 2.3q-.475.475-1.088.213T2 19.575V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v12q0 .825-.587 1.413T20 18zm-.85-2H20V4H4v13.125zM4 16V4z"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-warning {
+  --mdbook-alerts-color: rgb(154, 103, 0);
+  /* https://icon-sets.iconify.design/material-symbols/warning-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M2.725 21q-.275 0-.5-.137t-.35-.363q-.125-.225-.137-.488t.137-.512l9.25-16q.15-.25.388-.375T12 3q.25 0 .488.125t.387.375l9.25 16q.15.25.138.513t-.138.487q-.125.225-.35.363t-.5.137zm1.725-2h15.1L12 6zM12 18q.425 0 .713-.288T13 17q0-.425-.288-.712T12 16q-.425 0-.712.288T11 17q0 .425.288.713T12 18m0-3q.425 0 .713-.288T13 14v-3q0-.425-.288-.712T12 10q-.425 0-.712.288T11 11v3q0 .425.288.713T12 15m0-2.5"%2F%3E%3C%2Fsvg%3E');
+}
+
+.mdbook-alerts-caution {
+  --mdbook-alerts-color: rgb(207, 34, 46);
+  /* https://icon-sets.iconify.design/material-symbols/brightness-alert-outline-rounded/ */
+  --mdbook-alerts-icon: url('data:image/svg+xml,%3Csvg xmlns="http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" width="24" height="24" viewBox="0 0 24 24"%3E%3Cpath fill="currentColor" d="M12 17q.425 0 .713-.288T13 16q0-.425-.288-.712T12 15q-.425 0-.712.288T11 16q0 .425.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7q-.425 0-.712.288T11 8v4q0 .425.288.713T12 13m-3.35 7H6q-.825 0-1.412-.587T4 18v-2.65L2.075 13.4q-.275-.3-.425-.662T1.5 12q0-.375.15-.737t.425-.663L4 8.65V6q0-.825.588-1.412T6 4h2.65l1.95-1.925q.3-.275.663-.425T12 1.5q.375 0 .738.15t.662.425L15.35 4H18q.825 0 1.413.588T20 6v2.65l1.925 1.95q.275.3.425.663t.15.737q0 .375-.15.738t-.425.662L20 15.35V18q0 .825-.587 1.413T18 20h-2.65l-1.95 1.925q-.3.275-.662.425T12 22.5q-.375 0-.737-.15t-.663-.425zm.85-2l2.5 2.5l2.5-2.5H18v-3.5l2.5-2.5L18 9.5V6h-3.5L12 3.5L9.5 6H6v3.5L3.5 12L6 14.5V18zm2.5-6"%2F%3E%3C%2Fsvg%3E');
+}
+
+</style>
+<h1 id="design"><a class="header" href="#design">Design</a></h1>
+<p>Here we lay out the key drivers to embark on the creation of a new rule engine.
+By identifying design issues and choices before diving in into the weeds of the system’s building blocks, the “why” should be more clear. Next we will look at goals, non-goals and consider some cross-cutting concerns.</p>
+<p>A generic rule engine can take many shapes and forms. Here we try to identify the elements that are dear to us, placing the MaxRegel rule engine in the broader space of related systems.</p>
+<h2 id="goals"><a class="header" href="#goals">Goals</a></h2>
+<p>When choosing or building a rule engine, organizations care about more than just “does it work?” They need systems that are trustworthy, adaptable, and sustainable. The design goals of this engine focus on exactly those concerns: <strong>transparency</strong> ensures decisions can be explained to users and auditors; <strong>correctness</strong> builds confidence that outcomes are reliable; <strong>scalability</strong> makes the system practical for real-world volumes of data and rules; <strong>expressiveness</strong> allows complex business logic to be modeled without friction; <strong>maintainability</strong> keeps long-term costs low and avoids dependency risks; minimalization prevents bloat and confusion; <strong>extensibility</strong> makes the system future-proof and integrable with other tools; <strong>rule/data minimalization</strong> avoids retrieving more data than needed to get answers; and <strong>layered rule definition</strong> offers flexibility for both technical and non-technical teams. Together, these principles align the engine with the priorities of organizations that value clarity, performance, and long-term resilience.</p>
+<p>We will look at those goals in more detail:</p>
+<h3 id="transparency"><a class="header" href="#transparency">Transparency</a></h3>
+<p>The engine should make its reasoning visible. Users should be able to see why a decision was made.</p>
+<p>This means full traceability: a clear record of which rules fired, in what order, and which facts were used to reach a conclusion.</p>
+<p>Not all users need the same level of transparency. A customer getting a discount may be happy enough with “seasonal discount”, where a customer support “user” of the rule engine would like to see more details of why this customer was or was not eligible in order to resolve disputes. A marketing team would like to make clear what customer journeys lead to what discounts for improved targeting.</p>
+<h3 id="correctness"><a class="header" href="#correctness">Correctness</a></h3>
+<p>The engine should be trustworthy. Rules should work as expected and give predictable results.</p>
+<p>Achieved by breaking logic into small, testable building blocks. Each part can be proven correct individually, reducing errors in the larger system. Smaller blocks can be more easily understood and checked if they encode the desired behavior. It is a “divide and conquer” approach to correctness.</p>
+<h3 id="scalability"><a class="header" href="#scalability">Scalability</a></h3>
+<p>The engine should handle large workloads without slowing down. It should work quickly even with many rules and lots of data.</p>
+<ul>
+<li>Performance: Complex rule sets should process thousands of cases per second, enabling use cases like running simulations during policy design.</li>
+<li>Connectivity: Can pull in data from external sources (databases, REST APIs, etc.) as part of its reasoning.</li>
+</ul>
+<h3 id="expressiveness"><a class="header" href="#expressiveness">Expressiveness</a></h3>
+<p>The engine should let you describe logic in powerful ways.</p>
+<ul>
+<li>Tools to work with facts: You can transform, filter, and combine data however you need to create new insights (fact sets) in order to capture the logic you want.</li>
+<li>Declarative style: The order of rules and facts doesn’t matter, making it easier to compose small pieces into larger systems. For example, <em>“people under 12 are young”</em> and <em>“young people get a discount”</em>, leads to the same conclusions if the order of those rules is changed: <em>“young people get a discount”</em> and <em>“people under 12 are young”</em>. That is quite obvious here, but in larger systems this makes it easier to read rules by themselves, instead of knowing the order of their contextual rules.</li>
+</ul>
+<h3 id="maintainability"><a class="header" href="#maintainability">Maintainability</a></h3>
+<p>The system should be easy to understand, change, and extend over time. Built simply, without unnecessary complexity.</p>
+<ul>
+<li>From the ground up: pure operations, minimal moving parts. For organizations this is a way to keep long-term costs low.</li>
+<li>No external dependencies: avoids breaking changes from outside libraries and avoids bloat from unused features. It also is a safety when a software vendor runs out of business; rule engines quickly become core to an organization and external risks should be minimized.</li>
+</ul>
+<h3 id="ruledata-minimalization"><a class="header" href="#ruledata-minimalization">Rule/Data Minimalization</a></h3>
+<p>The engine should keep rules and data as simple and focused as possible. Avoid processing data that may not be needed for improved privacy.</p>
+<p>For example, when we can already see a customer is a member, and therefore will receive a discount, another rule checking the same discount based on a more privacy-sensitive age data can be omitted.</p>
+<p>Also, the data needed for performing the logic of a rule, should not have to be copied over to the rule engine. The rule engine would just connect to a part of an external database, making privacy (GDPR) compliance easier.</p>
+<p>Lean models and concise rules reduce maintenance and improve clarity. When an (intermediate) conclusion can already be made, there is no need to collect more (unnecessary) data.</p>
+<h3 id="extensibility"><a class="header" href="#extensibility">Extensibility</a></h3>
+<p>The engine should support new ideas and integrations without major rewrites. Eventhough you never know what the future you bring, allowing adaptability makes a rule engine more sustainable. One can add new functionality and connect to other systems with ease.</p>
+<p>Forward chaining generates all possible new facts, not just those needed for one outcome.
+These facts can be shared with other systems (e.g., via message queues) at any stage of processing.</p>
+<p>In our discount example, when determining the number of kids in a family, this is done for determining the discount. But that number may itself be fed into a fraud detection system. E.g. “more than 100 children in one family generates an alert of possible fraud”. Or, for people receiving a discount, send some happy email to offer them next month another benefit.</p>
+<p>Another way to look at extensibility is to ensure no proprietary software is needed to edit rules. Complicated and closed formats for storing rules may one day be a liability: what if the software company ceases to support the required software? An open (text-based) format for rules leaves the door open to create an alternative way of reusing those rules previously defined.</p>
+<hr />
+<p>Some goals can easily be married using the right implementation strategy. For example, an external-dependency-free approach, is part of simplicity, which aids <em>transparency</em> and <em>correctness</em>. But our need for expressiveness can clearly compete with other goals.</p>
+<p>Also note that our choice of “forward chaining” inference engine possibly uses and creates more data than strictly needed for an application. Our goal of <em>data minimization</em> contradicts the forward chaining approach[^note-dm].</p>
+<p>[^note-dm] In the “Scripting” chapter you’ll learn that rules can be cut short (or prioritized) by using <code>return_if</code> rules to support a level of data minimization.</p>
+<p>All in all, designing this system is therefore a balancing act.</p>
+<h2 id="non-goals"><a class="header" href="#non-goals">Non-goals</a></h2>
+<p>Overly generic. It is not a replacement for a full-fledged logical programming language, such as Prolog. General programming languages allow you to build anything, from rule engines to games. It comes at the price complexity with little aid to spell out you specific business logic.</p>
+<p>Extremely high speed eveluation of rules. No compilation to bare metal machine code. Readability and correctness in favor of raw speed.</p>
+<div class="mdbook-alerts mdbook-alerts-warning">
+<p class="mdbook-alerts-title">
+  <span class="mdbook-alerts-icon"></span>
+  warning
+</p>
+<p>wie kan beleid schrijven en vertaling naar code process makkelijk. niet per se code zo makkelijk dat iedereen het meteen gebruikt voor beleid maken. geen realistisch scenario.</p>
+</div>
+<p>A end-user friendly rule editing as main goal. The idea that domain experts use a high-level <em>domain specific language</em> and/or editor is attractive. It empowers smart people to implement changes in a policy themselves. When strongly believe in supporting such a way of working, though making that leading from the start may become a red herring in finding a solid base. We expect rules should be shared in a machine readable format too, for example. We have faith our axiomatic way of building higher level building blocks, bit by bit, will (among other things) also allow for high level rule representation that suits domain experts.</p>
+<p>It also leaves out typing of fields in domain objects. It can be very useful to spell out in great detail that the “price” information of an item costs is not simply “1.95”, but that the precision is two digits, the currency is Euro and that is should be formatted as “€ 1,95”. It is a complementary effort that MaxRegel can be extended with if required.</p>
+<h2 id="cross-cutting-concerns"><a class="header" href="#cross-cutting-concerns">Cross-cutting concerns</a></h2>
+<p>Things that are not goals themselves, but are expected to be important for a successful solution are described here.</p>
+<h3 id="simplicity"><a class="header" href="#simplicity">Simplicity</a></h3>
+<p>Keeping the system <em>simple</em> is… not so simple, given our goals. If we keep it as simple as possible it is more likely to be future-proof.</p>
+<p>Simplicity can show at different levels:</p>
+<ul>
+<li>Ensuring a small code base for the rule engine.</li>
+<li>No fancy language features. Rather implement the rule engine with a few more lines of code, than cryptic/smart one-liners.</li>
+<li>No or limit external dependencies.</li>
+</ul>
+<h3 id="multiple-abstraction-levels-for-writing-rules"><a class="header" href="#multiple-abstraction-levels-for-writing-rules">Multiple Abstraction Levels for Writing Rules</a></h3>
+<p>We know simplicity and expressiveness are at fundamental odds with one another for many domains.
+A very complicated rule in real life would require the rule engine to have advanced and complicated features to capture the logic accurately. But complicated features make it error-prone, and limit maintainability and transparency.</p>
+<p>Therefore, a goal is to support multiple ways of writing rules, using at different levels of abstraction. That allows you to use a clearer rule, say 90% of the time. But there is an escape hatch for the other complicated 10%. Those rule can then be coded in a less user-friendly way, but gets the job done. It allows one to write rules in a way that fits your needs.</p>
+<div class="table-wrapper"><table><thead><tr><th>Level</th><th>Expressiveness</th><th>simplicity</th><th>Write a rule…</th></tr></thead><tbody>
+<tr><td>raw programming language</td><td>\( \star \star \star \star \)</td><td>\( \star \)</td><td>in a full fletched programming language with all possibilities and pitfalls.</td></tr>
+<tr><td>combinator library</td><td>\( \star \star \star \)</td><td>\( \star \star \)</td><td>using reusable function of the inference engine in code.</td></tr>
+<tr><td>fluent API</td><td>\( \star \star \)</td><td>\( \star \star \star \)</td><td>like an embedded Domain Specific Language (DSL) within code.</td></tr>
+<tr><td>rule scripting language</td><td>\( \star \star \)</td><td>\( \star \star \star \star \)</td><td>in the most human readable, yet formal, way possible as external scripts, not requiring the hosting programming language the rule engine is written in.</td></tr>
+</tbody></table>
+</div>
+<p>A special mention is a rule exchange format, in a way that external DSL editors (such as Jetbrains Meta Programming System, MPS). This is out of scope for this document, but would likely tap into the <em>combinator library</em> level.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="background.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="facts.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="background.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="facts.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js"></script>
+        <script src="mark.min.js"></script>
+        <script src="searcher.js"></script>
+
+        <script src="clipboard.min.js"></script>
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
