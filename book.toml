@@ -1,8 +1,9 @@
 [book]
 authors = ["Arvid Halma"]
 language = "en"
-src = "src"
 title = "MaxRegel - Building a Rule Engine from the Ground Up"
+src = "src"
+build-dir = "docs"
 
 # Alerts ()
 [preprocessor.alerts]

@@ -51,5 +51,5 @@ cargo install mdbook-image-size
 
 ### Build
 ```bash
-mdbook build
+mdbook build -d docs
 ```
