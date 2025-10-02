@@ -2,6 +2,8 @@
 
 # MaxRegel - Building a Rule Engine from the Ground Up
 
+> **_READ ONLINE_**: Start reading [here](https://minbzk.github.io/max-regel-book/).
+
 This document serves as an introduction to the concepts, design and implementation of our rule system, named MaxRegel (See: [max-regel-core](https://github.com/MinBZK/max-regel-core) library).
 
 A rule engine is a software system that makes decisions based on a set of rules. Instead of writing a lot of complex code, you list the rules, and the engine figures out what to do based on the facts it knows.
